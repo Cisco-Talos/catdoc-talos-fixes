@@ -84,3 +84,16 @@ source diff:
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary
+
+DEBVERS    ?= $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
+VERSION    ?= $(shell echo '$(DEBVERS)' | sed 's/^[[:digit:]]*://; s/[-].*//')
+DEBPKGNAME ?= $(shell dpkg-parsechangelog | sed -n -e 's/^Source: //p')
+GITCOMMIT  ?= $(shell echo '$(VERSION)' | \
+              sed -e 's/.*[+~]git[[:digit:]]*\.\([[:xdigit:]]*\).*/\1/')
+
+gen-orig-tgz:
+	if [ ! -f ../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ] ; then \
+	    git archive --format=tar.gz --prefix=$(DEBPKGNAME)-$(VERSION)/ \
+	        $(GITCOMMIT) >../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ; \
+	fi
+
