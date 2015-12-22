@@ -1,18 +1,14 @@
-catdoc (0.94.3-3) unstable; urgency=low
+catdoc (0.94.4-1.1) unstable; urgency=low
 
-  * Remove the change to chainCurrent check in ole.c for amd64 as it
-    causes OpenOfficeWriter .doc files to fail to parse.
+  * Non-maintainer upload.
+  * New upstream release to remove .pc subdirectory from
+    the orig tarball (Closes: #692073). Includes updating
+    version strings in generated manpages.
+  * Remove extra ';' in src/xlsparse.c which turned for loop in
+    xlsparse into a buffer overflow (Closes: #692076), applies
+    patch by Olly Betts <olly@survex.com>.
 
- -- Neil Williams <neilw@toby-churchill.com>  Tue, 04 Sep 2012 15:51:17 +0100
-
-catdoc (0.94.3-2) unstable; urgency=low
-
-  * Apply charset_fix.patch for rtfread support.
-  * Add amd64 fix patch and newline, fonttbl fix patches.
-  * Update newline fonttbl patch for dynamic allocation of font tables.
-  * Add patch to fix the upstream catdoc version string.
-
- -- Neil Williams <neilw@toby-churchill.com>  Fri, 31 Aug 2012 11:49:47 +0100
+ -- Neil Williams <codehelp@debian.org>  Mon, 03 Dec 2012 18:22:47 +0000
 
 catdoc (0.94.3-1) unstable; urgency=low
 
@@ -187,7 +183,7 @@ catdoc (0.91.4-5) unstable; urgency=low
 
 catdoc (0.91.4-4) unstable; urgency=low
 
-  * Finally end transition to /usr/share. Fixed bug in wordview.tcl
+  * Finally end transition to /usr/share. Fixed bug in wordview.tcl 
   (thanks to Sacha)
 
  -- Peter Novodvorsky <nidd@debian.org>  Tue, 23 Jan 2001 23:40:39 +0300
@@ -211,7 +207,7 @@ catdoc (0.91.4-2) unstable; urgency=low
 catdoc (0.91.4-1) frozen unstable; urgency=medium
 
   * target frozen since this closes a release-critical bug
-  * new upstream version, has fixes for seg faults in xls2csv, seems to fix
+  * new upstream version, has fixes for seg faults in xls2csv, seems to fix 
     the TCL problem during 'save as' in wordview (at least, I can't reproduce
     the problem in this version), and fixes at least one man page problem.
     Closes: #60623, #54869, #56988, #54870
@@ -289,7 +285,7 @@ catdoc (0.90a2-0.1) unstable; urgency=low
 catdoc (0.33-3) frozen unstable; urgency=low
 
   * Doesn't call update-menu twice (bug #21604)
-  * Wordview uses wish instead of wish4.2
+  * Wordview uses wish instead of wish4.2 
   * Suggests wish, to make use of wordview
 
  -- Bjorn Brenander <bjorn@debian.org>  Sat,  2 May 1998 09:36:30 +0200

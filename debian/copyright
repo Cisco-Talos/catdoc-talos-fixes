@@ -32,6 +32,7 @@ Copyright: 1998, Copyright Christoph Lameter <clameter@debian.org>
            2001-2006, Pawel Wiecek <coven@debian.org>
            2010, Basian Venthur <venthur@debian.org>
            2011, Nick Bane <nick@enomem.co.uk>
+
 License: GPL-2
  This program is free software; you can redistribute it
  and/or modify it under the terms of the GNU General Public

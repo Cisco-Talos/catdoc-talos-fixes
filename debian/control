@@ -2,11 +2,8 @@ Source: catdoc
 Section: text
 Priority: optional
 Maintainer: Nick Bane <nick@enomem.co.uk>
-Uploaders: Neil Williams <neilw@toby-churchill.com>
 Build-Depends: debhelper (>> 7.0.0), tk
 Standards-Version: 3.9.3
-Vcs-Browser: http://svn.debian.org/viewsvn/catdoc/trunk/
-Vcs-Svn: svn://anonscm.debian.org/catdoc/trunk
 
 Package: catdoc
 Architecture: any
@@ -28,6 +25,6 @@ Description: MS-Word to TeX or plain text converter
  data from PowerPoint presentations.
  .
  This package suggests tk because it also includes wordview, an
- optional tk-based GUI for catdoc.  The MIME config provided in this
+ optional Tk-based GUI for catdoc.  The MIME config provided in this
  package will use wordview if X is running, or catdoc directly if it
  is not.

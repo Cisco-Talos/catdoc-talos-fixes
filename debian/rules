@@ -25,7 +25,7 @@ clean:
 	dh_testdir
 	dh_testroot
 	rm -f build-stamp install-stamp
-	$(RM) -r .pc
+
 	# Add here commands to clean up after the build process.
 	[ ! -f Makefile ] || $(MAKE) distclean
 	$(RM) doc/catdoc.ps doc/catppt.ps doc/xls2csv.ps
