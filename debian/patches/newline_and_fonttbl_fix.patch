@@ -1,0 +1,249 @@
+Description: newline_and_fonttbl_fix.patch
+Author: Nick Bane <nick@enomem.co.uk>
+---
+
+Index: trunk/src/rtfread.c
+===================================================================
+--- trunk.orig/src/rtfread.c	2012-08-31 11:26:59.000000000 +0100
++++ trunk/src/rtfread.c	2012-08-31 11:31:14.000000000 +0100
+@@ -25,6 +25,7 @@
+ 	RTF_UNICODE_CHAR,
+ 	RTF_CHAR,
+ 	RTF_PARA,
++	RTF_LINE,
+ 	RTF_TABLE_START,
+ 	RTF_TABLE_END,
+ 	RTF_ROW,
+@@ -77,6 +78,7 @@
+ 	{"ansicpg",RTF_CODEPAGE},
+ 	{"pard",RTF_PARD},
+ 	{"par",RTF_PARA},
++	{"line",RTF_LINE},
+ 	{"cell",RTF_CELL},
+ 	{"row",RTF_ROW},
+  	{"overlay",RTF_OVERLAY},
+@@ -191,9 +193,9 @@
+  * 
+  */
+ 
+-#define FONT_TABLE_MAX 50
+-static RTFFontTableEntry fontTable[FONT_TABLE_MAX];
++static RTFFontTableEntry *fontTable;
+ static int font_table_entries;
++static int font_table_size;
+ 
+ /********************************************************
+  * Functions implementation
+@@ -204,7 +206,7 @@
+ static int loadFontTableEntry(FILE *f, RTFFontTableEntry *entry) {
+ 	int level = 0;
+ 	if (!f || !entry)
+-	    return -1;
++		return -1;
+ 	/* label id as invalid */
+ 	entry->id = -1;
+ 	/* check opening brace */
+@@ -215,9 +217,9 @@
+ 		return -1;
+ 	level = 1;
+ 	do {
+-	    int c = fgetc(f);
+-	    if (feof(f))
+-		return -1;
++		int c = fgetc(f);
++		if (feof(f))
++			return -1;
+ 	    switch (c) {
+ 		case '\\':
+ 		{
+@@ -267,23 +269,43 @@
+ }
+ 
+ static void loadFontTable(FILE *f) {
+-    int c;
+-    font_table_entries = 0;
+-    do {
+-	c = getc(f);
+-	if (feof(f))
+-	    return;
+-	if (c == '{') {
+-	    ungetc('{',f);
+-	    /* load entry */
+-	    if (loadFontTableEntry(f,&fontTable[font_table_entries]) == 0) {
+-		if (font_table_entries < (FONT_TABLE_MAX - 1))
+-			font_table_entries++;
+-	    }
+-	}
+-	else if ((c != '\r') && (c != '\n'))
+-	    break;
+-    } while(1);
++	int c;
++	int single_table = 0;
++	font_table_entries = 0;
++	do {
++		c = getc(f);
++		if (feof(f))
++			return;
++		// if the lead-in is \ then this is a single entry.
++		// the training } will actually be the font table end not the entry end
++		// so the } needs pushing back
++		if (c == '\\') {
++			single_table = 1;
++			c = '{';
++		}
++		if (c == '{') {
++			ungetc('{',f);
++			/* make sure we have space for another entry */
++			if (font_table_entries+1 >= font_table_size) {
++				font_table_size+=25;
++				if((fontTable=(RTFFontTableEntry*)realloc(fontTable,
++					font_table_size*sizeof(RTFFontTableEntry)))
++					== NULL ) {
++					perror("Can\'t allocate memory: ");
++					exit(-1);
++				}
++			}
++			/* load entry */
++			if (loadFontTableEntry(f,&fontTable[font_table_entries]) == 0) {
++				if (font_table_entries < (font_table_size - 1))
++					font_table_entries++;
++			}
++			if (single_table)
++				ungetc('}', f);
++		}
++		else if ((c != '\r') && (c != '\n'))
++			break;
++	} while(1);
+ }
+ 
+ extern unsigned short int buffer[];
+@@ -297,11 +319,15 @@
+ }
+ 
+ static void end_paragraph(int *bufptr) {
+-				   add_to_buffer(bufptr,0x000a);
+-				   add_to_buffer(bufptr,0);
+-				   output_paragraph(buffer);
+-				   *bufptr=-1;
+-}				   
++	add_to_buffer(bufptr,0x000a);
++	add_to_buffer(bufptr,0);
++	output_paragraph(buffer);
++	*bufptr=-1;
++}
++
++static void end_line(int *bufptr) {
++	add_to_buffer(bufptr,'\n');
++}
+ 
+ typedef struct {
+ 	int index;
+@@ -512,10 +538,14 @@
+  * @param f - file stream descriptor
+  */
+ 
++extern int para_double_newline;
++
+ int parse_rtf(FILE *f) {
+ 	int para_mode=0, data_skip_mode=0,i;
+ 	RTFGroupData *groups=NULL;
+ 	int group_count=0, group_store=20;
++	fontTable = NULL;
++	font_table_entries = font_table_size = 0;
+ 	// this makes sure we have an mbcs lookup table available
+ 	(void)read_charset("shiftjis");
+ 	// and now set it back to the original
+@@ -530,6 +560,10 @@
+ 	groups[0].mbcs = 0; /* assume not using multibyte characters */
+ 	groups[0].codepage = 1252;
+ 	groups[0].charset = source_charset;
++
++	/* this is to stop paragraph delimiters outputing a double newline */
++	para_double_newline = 0;
++
+ 	while ( !feof(f) ) {
+ 		int c = fgetc(f);
+ 		if ( feof( f ) )
+@@ -546,15 +580,21 @@
+ 					data_skip_mode=group_count;
+ 				} else if (com.numarg == '\r') {
+ 					end_paragraph(&bufptr);
++				} else if (com.numarg == '\n') {
++					end_line(&bufptr);
+ 				} else if (com.numarg == '~') {
+ 					add_to_buffer(&bufptr,0xA0);/* NO-BREAK SPACE */
+ 				} else if (com.numarg == '-') {
+ 					add_to_buffer(&bufptr,0xAD);/* Optional hyphen */
++				} else if (com.numarg == '{') {
++					add_to_buffer(&bufptr,'{');/* Open brace */
++				} else if (com.numarg == '}') {
++					add_to_buffer(&bufptr,'}');/* Close brace */
+ 				}
+-				   break;
++				break;
+ 			case RTF_EMDASH:
+-				   add_to_buffer(&bufptr,0x2014);/* EM DASH*/
+-				   break;
++				add_to_buffer(&bufptr,0x2014);/* EM DASH*/
++				break;
+ 			case RTF_ENDASH: 
+ 				   add_to_buffer(&bufptr,0x2013);break;
+ 			case RTF_BULLET: 
+@@ -645,10 +685,13 @@
+ 					}
+ 				}
+ 				break;
++			case RTF_LINE:
++				end_line(&bufptr);
++				break;
+ 			case RTF_PARA:
+ 				/* *** CHECKME *** if (para_mode > 0) {*/
+-					end_paragraph(&bufptr);	
+-				/*}*/	
++				end_paragraph(&bufptr);
++				/*}*/
+ 				para_mode=group_count;
+ 				break;
+ 			case RTF_PICT:
+Index: trunk/src/writer.c
+===================================================================
+--- trunk.orig/src/writer.c	2012-08-31 11:26:59.000000000 +0100
++++ trunk/src/writer.c	2012-08-31 11:30:06.000000000 +0100
+@@ -21,6 +21,9 @@
+ /* charset.c                                                            */
+ /************************************************************************/
+ static char outputbuffer[LINE_BUF_SIZE]="";
++
++int para_double_newline = 1;
++
+ void out_char(const char *chunk) {
+ 	static int bufpos=0;
+ 	int eol_flag=0;
+@@ -34,7 +37,7 @@
+ 			*p;
+ 			*(q++)=*(p++),bufpos++) {
+ 			if (*p=='\n') eol_flag=1;
+-	}		
++	}
+ 	*q=0;
+ 		 /* This strcat is safe. wrap margin setting
+ 							 code in main.c ensures that wrap_margin is 
+@@ -46,11 +49,13 @@
+ 		fputs(outputbuffer,stdout);
+ 		*outputbuffer=0;
+ 		bufpos=0;
+-		if (q) {
+-			 fputs(q,stdout);
+-		} else {
+-			fputc('\n',stdout);
+-		}	
++		if (para_double_newline) {
++			if (q) {
++				 fputs(q,stdout);
++			} else {
++				fputc('\n',stdout);
++			}
++		}
+ 	} else if (bufpos>wrap_margin) {
+ 		char *q=outputbuffer,*p=outputbuffer+wrap_margin;
+ 		

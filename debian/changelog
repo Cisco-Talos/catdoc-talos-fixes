@@ -1,0 +1,312 @@
+catdoc (0.94.3-3) unstable; urgency=low
+
+  * Remove the change to chainCurrent check in ole.c for amd64 as it
+    causes OpenOfficeWriter .doc files to fail to parse.
+
+ -- Neil Williams <neilw@toby-churchill.com>  Tue, 04 Sep 2012 15:51:17 +0100
+
+catdoc (0.94.3-2) unstable; urgency=low
+
+  * Apply charset_fix.patch for rtfread support.
+  * Add amd64 fix patch and newline, fonttbl fix patches.
+  * Update newline fonttbl patch for dynamic allocation of font tables.
+  * Add patch to fix the upstream catdoc version string.
+
+ -- Neil Williams <neilw@toby-churchill.com>  Fri, 31 Aug 2012 11:49:47 +0100
+
+catdoc (0.94.3-1) unstable; urgency=low
+
+  * Declare new upstream release
+  * Fix codepage bugs (Closes: #648921)
+  * Fix charset bug (Closes: #648726)
+  * Handle negative numbers on 64bit architectures (Closes: #555622)
+  * Fix Macintosh MS1904 date bug in xlsparse reported ubuntu #349016
+
+ -- Nick Bane <nick@enomem.co.uk>  Sun, 10 Jun 2012 11:04:47 +0100
+
+catdoc (0.94.2-2) unstable; urgency=low
+
+  * New maintainer (Closes: #631798)
+  * Add font table support to rtf parser
+  * Handle invalid unicode character return of -1 correctly in rtf parser
+  * Trap zero length docs
+  * Add cross building support
+  * Increase DBCS support for cp932 in rtf parser
+  * Add check for reloading current charset in rtf parser
+  * Implement rtf deflang/plain control word interaction
+  * Add rtf support for font charsets suggesting codepages and mbcs support
+  * Add lang+codepage support in rtf parser
+  * Add removal of escaped chars after unicode char
+  * And default to single char removal and implement sanely
+  * Skip index entries in rtf parser
+  * Cleaup some whitespace/static defs in rtf parser
+  * Add gnome desktop entry under Office
+  * Updated copright file to DEP-5 format
+
+ -- Nick Bane <nick@enomem.co.uk>  Sat, 30 Jul 2011 14:44:15 +0100
+
+catdoc (0.94.2-1.1) unstable; urgency=low
+
+  * Non-maintainer upload. Applied patch by Sergei Golovan:
+  * Replaced obsolete tk8.3 build-dependency by default tk package.
+
+ -- Bastian Venthur <venthur@debian.org>  Fri, 13 Aug 2010 23:24:59 +0200
+
+catdoc (0.94.2-1) unstable; urgency=low
+
+  * New upstream version, fixes a few OLE-parsing bugs (closes: #358707)
+  * Fixed mailcap (closes: #313616, #316122)
+  * Fixed some typos (closes: #327905, #327907)
+  * Updated copyright file (closes: #353819)
+  * Updated standards-version in debian/control
+
+ -- Pawel Wiecek <coven@debian.org>  Wed, 29 Mar 2006 22:48:50 +0200
+
+catdoc (0.94.0-1) unstable; urgency=low
+
+  * New upstream version
+     - fixes field type problems in xls2csv (closes: #292555)
+     - adds new utility: catppt
+  * Applied numerous patches from A Costa <agcosta@gis.net> to fix typos in
+    manpages (closes: #304318, #305965, #305966, #305967)
+  * Added some asian charsets (closes: #278004)
+  * Re-added xlsview that disappeared from package some time
+
+ -- Pawel Wiecek <coven@debian.org>  Mon, 16 May 2005 22:22:49 +0200
+
+catdoc (0.93.4-2) unstable; urgency=low
+
+  * Fixed TeX charset conversion table for backslash and hash
+    (closes: #278257)
+  * Moved wordview from /usr/X11R6 to /usr (policy)
+
+ -- Pawel Wiecek <coven@debian.org>  Sat,  8 Jan 2005 19:21:40 +0100
+
+catdoc (0.93.4-1) unstable; urgency=low
+
+  * New upstream version (closes: #255625)
+
+ -- Pawel Wiecek <coven@debian.org>  Thu, 30 Sep 2004 23:01:49 +0200
+
+catdoc (0.93.3-3) unstable; urgency=low
+
+  * Fixed charset files location in catdoc.1 (closes: #238461)
+  * Fixed a typo in catdoc.1
+  * Added information about current and previous Debian maintainers to
+    copyright file (closes: #239126)
+  * Enhanced long description with info about supported file formats other
+    than .doc (closes: #239127)
+
+ -- Pawel Wiecek <coven@debian.org>  Wed, 24 Mar 2004 21:08:41 +0100
+
+catdoc (0.93.3-2) unstable; urgency=low
+
+  * Changed build dependency from wish to tk8.3 (which provides wish anyway)
+    because autobuilders barfed (closes: #228739)
+
+ -- Pawel Wiecek <coven@debian.org>  Wed, 21 Jan 2004 20:50:59 +0100
+
+catdoc (0.93.3-1) unstable; urgency=low
+
+  * New upstream version (closes: #197426, #105255, #228190)
+  * Dropped our version of manpage for wordview, as there's now upstream
+    manual available
+
+ -- Pawel Wiecek <coven@debian.org>  Tue, 20 Jan 2004 15:08:11 +0100
+
+catdoc (0.93.1-1) unstable; urgency=low
+
+  * New upstream version (closes: #198637, #22861)
+  * Updated standards version (no changes required)
+
+ -- Pawel Wiecek <coven@debian.org>  Mon, 13 Oct 2003 16:24:00 +0200
+
+catdoc (0.91.6-1) unstable; urgency=low
+
+  * New upstream version (closes: #182404, #169428, #188786)
+  * Updated standards version
+
+ -- Pawel Wiecek <coven@debian.org>  Wed, 28 May 2003 13:12:19 +0200
+
+catdoc (0.91.5-3) unstable; urgency=low
+
+  * Fixed manpages (closes: #175643, #185834)
+  * Updated standards version
+  * Fixed a couple of lintian errors
+
+ -- Pawel Wiecek <coven@debian.org>  Thu, 24 Apr 2003 22:13:59 +0200
+
+catdoc (0.91.5-2) unstable; urgency=high
+
+  * Fixed insecure /tmp use (closes: #183525)
+
+ -- Pawel Wiecek <coven@debian.org>  Wed, 23 Apr 2003 15:46:19 +0200
+
+catdoc (0.91.5-1) unstable; urgency=low
+
+  * New upstream version (closes: #136222)
+  * GPL version now specified in copyright (closes: #133488)
+
+ -- Pawel Wiecek <coven@debian.org>  Fri,  1 Mar 2002 13:59:13 +0100
+
+catdoc (0.91.4-9) unstable; urgency=low
+
+  * This time really changed maintainer address in debian/control
+    (closes: #135056, #131812)
+
+ -- Pawel Wiecek <coven@debian.org>  Fri, 22 Feb 2002 14:42:35 +0100
+
+catdoc (0.91.4-8) unstable; urgency=low
+
+  * New maintainer (closes: #135056)
+  * Fixed problem with opening files with spaces in filenames
+    (closes: #131812)
+  * Converted to debhelper 3
+
+ -- Pawel Wiecek <coven@debian.org>  Fri, 22 Feb 2002 13:13:26 +0100
+
+catdoc (0.91.4-7) unstable; urgency=low
+
+  * Fixed problem on powerpc (Closes: #104103)
+  * Fixed package desctiption (Closes: #124050)
+
+ -- Peter Novodvorsky <nidd@debian.org>  Sat, 29 Dec 2001 18:59:41 +0300
+
+catdoc (0.91.4-6) unstable; urgency=low
+
+  * Got rid of ^M in the end of lines in xlsview.
+  Closes: #109508, #113883, #117882, #116950
+
+ -- Peter Novodvorsky <nidd@debian.org>  Fri,  9 Nov 2001 17:34:15 +0300
+
+catdoc (0.91.4-5) unstable; urgency=low
+
+  * Changed menu section to 'Apps/Viewers'. (Closes: Bug#85881)
+
+ -- Peter Novodvorsky <nidd@debian.org>  Fri, 15 Jun 2001 00:40:39 +0300
+
+catdoc (0.91.4-4) unstable; urgency=low
+
+  * Finally end transition to /usr/share. Fixed bug in wordview.tcl
+  (thanks to Sacha)
+
+ -- Peter Novodvorsky <nidd@debian.org>  Tue, 23 Jan 2001 23:40:39 +0300
+
+catdoc (0.91.4-3) unstable; urgency=low
+
+  * Finally fixed '-d' option with xls2csv (Closes: Bug#78020).
+  * Changed path /usr/lib to /usr/share/. (thanks to Robert)
+
+ -- Peter Novodvorsky <nidd@debian.org>  Tue, 23 Jan 2001 23:40:08 +0300
+
+catdoc (0.91.4-2) unstable; urgency=low
+
+  * Maintainer changed. (Closes: Bug#80128)
+  * Fixed various bugs in msxlsview.sh (Closes: Bug#76460)
+  * Fixed various bugs in xls2csv (Closes: Bug#78020)
+  * catdoc.1 isn't installed int /usr/man now.
+
+ -- Peter Novodvorsky <nidd@debian.org>  Fri, 22 Dec 2000 23:58:11 +0300
+
+catdoc (0.91.4-1) frozen unstable; urgency=medium
+
+  * target frozen since this closes a release-critical bug
+  * new upstream version, has fixes for seg faults in xls2csv, seems to fix
+    the TCL problem during 'save as' in wordview (at least, I can't reproduce
+    the problem in this version), and fixes at least one man page problem.
+    Closes: #60623, #54869, #56988, #54870
+  * catdoc already suggests wish, I don't want to make it a depends because
+    the catdoc executable is completely useful without X.  I suppose I could
+    split catdoc into two packages, but I really don't see the need.
+    Closes: #59874
+
+ -- Bdale Garbee <bdale@gag.com>  Sat, 18 Mar 2000 22:51:53 -0700
+
+catdoc (0.91.2-6) unstable; urgency=low
+
+  * change unicode(4) references to unicode(7) in man pages, closes: #54318
+
+ -- Bdale Garbee <bdale@gag.com>  Fri,  7 Jan 2000 20:08:26 -0700
+
+catdoc (0.91.2-5) unstable; urgency=low
+
+  * add wish to the Build-Depends so configure can find it, closes: #51839
+
+ -- Bdale Garbee <bdale@gag.com>  Fri,  7 Jan 2000 01:08:55 -0700
+
+catdoc (0.91.2-4) unstable; urgency=low
+
+  * update control to include Build-Depends, closes: #51276
+
+ -- Bdale Garbee <bdale@gag.com>  Wed,  1 Dec 1999 23:22:16 -0700
+
+catdoc (0.91.2-3) unstable; urgency=low
+
+  * update mailcap entry for catdoc to include copiousoutput, closes: #51190
+
+ -- Bdale Garbee <bdale@gag.com>  Sat, 27 Nov 1999 16:52:03 -0700
+
+catdoc (0.91.2-2) unstable; urgency=low
+
+  * misc updates to package scripts and documentation
+    closes: #43897, #33327, #44380, #38878
+
+ -- Bdale Garbee <bdale@gag.com>  Sat, 20 Nov 1999 18:41:31 -0700
+
+catdoc (0.91.2-1) unstable; urgency=low
+
+  * new upstream (development) version, closes: #43897, #33327, #44380
+  * switch to maintainer version numbers instead of NMU's
+  * fix typos in README, closes: #38878
+
+ -- Bdale Garbee <bdale@gag.com>  Fri, 19 Nov 1999 11:29:42 -0700
+
+catdoc (0.90r-0.2) frozen unstable; urgency=low
+
+  * incorporate some packaging details from Artem Chuprina, including the
+    addition of a default configuration file instead of relying on compile-time
+    defaults (more obvious to users how to change things if they need to),
+    and tweaks to the man page for catdoc.
+
+ -- Bdale Garbee <bdale@gag.com>  Tue,  3 Nov 1998 08:26:24 -0700
+
+catdoc (0.90r-0.1) frozen unstable; urgency=low
+
+  * new upstream release, replaces pre-released with released 0.90 version
+
+ -- Bdale Garbee <bdale@gag.com>  Mon,  2 Nov 1998 23:20:29 -0700
+
+catdoc (0.90a2-0.1) unstable; urgency=low
+
+  * non-maintainer package of new upstream release
+  * reconfigure rules file to use debhelper
+  * add support to handle application/msword MIME type in /etc/mailcap
+  * create a manpage (lame though it may be) for wordview
+  * mark bugs 27485, 26033 as fixed, other two untested but may be fixed
+
+ -- Bdale Garbee <bdale@gag.com>  Tue,  6 Oct 1998 00:02:57 -0600
+
+catdoc (0.33-3) frozen unstable; urgency=low
+
+  * Doesn't call update-menu twice (bug #21604)
+  * Wordview uses wish instead of wish4.2
+  * Suggests wish, to make use of wordview
+
+ -- Bjorn Brenander <bjorn@debian.org>  Sat,  2 May 1998 09:36:30 +0200
+
+catdoc (0.33-2) frozen; urgency=low
+
+  * Changed modes for catdoc.c to 0644
+  * Fixed problem with executing catdoc from wordview
+  * Corrected some typos in manpage and README file
+  * Added Debian menu support
+
+ -- Bjorn Brenander <bjorn@debian.org>  Sat, 11 Apr 1998 01:58:27 +0200
+
+catdoc (0.33-1) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Christoph Lameter <clameter@debian.org>  Fri, 27 Feb 1998 18:28:33 -0800
+
+

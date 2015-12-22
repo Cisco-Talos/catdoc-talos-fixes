@@ -1,0 +1,33 @@
+Source: catdoc
+Section: text
+Priority: optional
+Maintainer: Nick Bane <nick@enomem.co.uk>
+Uploaders: Neil Williams <neilw@toby-churchill.com>
+Build-Depends: debhelper (>> 7.0.0), tk
+Standards-Version: 3.9.3
+Vcs-Browser: http://svn.debian.org/viewsvn/catdoc/trunk/
+Vcs-Svn: svn://anonscm.debian.org/catdoc/trunk
+
+Package: catdoc
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Suggests: tk | wish
+Homepage: http://freshmeat.net/projects/catdoc
+Description: MS-Word to TeX or plain text converter
+ This program extracts text from MS-Word files, trying to preserve
+ as many special printable characters as possible. catdoc supports
+ everything up to Word-97. Also supported are MS Write documents and RTF
+ files.
+ .
+ It doesn't even try to preserve fancy Word formatting, because
+ Word users usually don't care about document structure, and it is
+ this very thing which is important to LaTeX users.
+ .
+ Also provided is xls2csv, which extracts data from Excel spreadsheets
+ and outputs it in comma-separated-value format and catppt, which extracts
+ data from PowerPoint presentations.
+ .
+ This package suggests tk because it also includes wordview, an
+ optional tk-based GUI for catdoc.  The MIME config provided in this
+ package will use wordview if X is running, or catdoc directly if it
+ is not.

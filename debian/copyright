@@ -1,0 +1,54 @@
+Format: http://anonscm.debian.org/viewvc/dep/web/deps/dep5.mdwn?view=markup&pathrev=174
+Upstream-Name: Catdoc
+Source: ftp://ftp.45.free.net/pub/catdoc/
+
+Files: *
+Copyright: Copyright (c) by Victor B. Wagner 1997-98
+License: GPL-2
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License version 2 of the License.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+
+Files: debian/*
+Copyright: 1998, Copyright Christoph Lameter <clameter@debian.org>
+           1998, Bjorn Brenander <bjorn@debian.org>
+           1998-2000, Bdale Garbee <bdale@gag.com>
+           2000-2001, Peter Novodvorsky <nidd@debian.org>
+           2001-2006, Pawel Wiecek <coven@debian.org>
+           2010, Basian Venthur <venthur@debian.org>
+           2011, Nick Bane <nick@enomem.co.uk>
+License: GPL-2
+ This program is free software; you can redistribute it
+ and/or modify it under the terms of the GNU General Public
+ License version 2 of the License.
+ .
+ This program is distributed in the hope that it will be
+ useful, but WITHOUT ANY WARRANTY; without even the implied
+ warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+ PURPOSE.  See the GNU General Public License for more
+ details.
+ .
+ You should have received a copy of the GNU General Public
+ License along with this package; if not, write to the Free
+ Software Foundation, Inc., 51 Franklin St, Fifth Floor,
+ Boston, MA  02110-1301 USA
+ .
+ On Debian systems, the full text of the GNU General Public
+ License version 2 can be found in the file
+ `/usr/share/common-licenses/GPL-2'.
+

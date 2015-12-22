@@ -1,0 +1,4 @@
+Bug#692076-Buffer_overflow.patch
+amd64_fixes.patch
+newline_and_fonttbl_fix.patch
+charset_fix.patch
