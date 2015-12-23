@@ -1,4 +1,4 @@
-catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) UNRELEASED; urgency=medium
+catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) unstable; urgency=medium
 
   * Add VCS-* fields.
   * Fix an out-of-bounds access in ole_readdir. Closes: #679877.
@@ -7,7 +7,7 @@ catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) UNRELEASED; urgency=medium
   * Suppress "Format a4 redefined" message, thanks to Olly Betts for the
     patch. Closes: #797029.
 
- -- Martín Ferrari <tincho@debian.org>  Wed, 23 Dec 2015 15:44:19 +0000
+ -- Martín Ferrari <tincho@debian.org>  Wed, 23 Dec 2015 23:27:09 +0000
 
 catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) unstable; urgency=medium
 
