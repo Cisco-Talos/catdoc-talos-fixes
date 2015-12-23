@@ -1,4 +1,4 @@
-catdoc (1:0.94.3~git20151007.a79f237+dfsg-1) UNRELEASED; urgency=medium
+catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) UNRELEASED; urgency=medium
 
   * Start packaging from scratch, discard unmaintained and undocumented fork
     made by previous Debian maintainers. Closes: #615286.

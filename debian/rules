@@ -1,95 +1,36 @@
 #!/usr/bin/make -f
-# MAde with the aid of dh_make, by Craig Small
-# Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
-# Some lines taken from debmake, by Cristoph Lameter.
 
-# Uncomment this to turn on verbose mode.
+export DH_OPTIONS
 #export DH_VERBOSE=1
 
-# This has to be exported to make some magic below work.
-export DH_OPTIONS
-
-build: build-arch build-indep
-build-arch: build-stamp
-build-indep: build-stamp
-build-stamp:
-	dh_testdir
-
-	./configure --prefix=/usr
-	# Add here commands to compile the package.
-	$(MAKE) SYSTEMRC=/etc/catdocrc
-
-	touch build-stamp
-
-clean:
-	dh_testdir
-	dh_testroot
-	rm -f build-stamp install-stamp
-
-	# Add here commands to clean up after the build process.
-	[ ! -f Makefile ] || $(MAKE) distclean
-	$(RM) doc/catdoc.ps doc/catppt.ps doc/xls2csv.ps
-	$(RM) doc/catdoc.txt doc/catppt.txt doc/xls2csv.txt
-	$(RM) config.status config.log config.cache
-
-	dh_clean
-
-install: install-stamp
-install-stamp: build-stamp
-	dh_testdir
-	dh_testroot
-	dh_prep
-	dh_installdirs
-
-	# Add here commands to install the package into debian/catdoc.
-	$(MAKE) install prefix=`pwd`/debian/catdoc/usr
-	install src/msxlsview.sh `pwd`/debian/catdoc/usr/bin/xlsview
-	cp doc/*.1 `pwd`/debian/catdoc/usr/share/man/man1
-	cp debian/*.1 `pwd`/debian/catdoc/usr/share/man/man1
-	cp debian/mime `pwd`/debian/catdoc/usr/lib/mime/packages/catdoc
-	cp debian/catdocrc `pwd`/debian/catdoc/etc
-
-	touch install-stamp
-
-# Build architecture-independent files here.
-binary-indep: build install
-# We have nothing to do by default.
-
-# Build architecture-dependent files here.
-binary-arch: build install
-#	dh_testversion
-	dh_testdir
-	dh_testroot
-	dh_installdocs
-	dh_installexamples
-	dh_installmenu
-#	dh_installemacsen
-#	dh_installinit
-	dh_installcron
-	dh_installman
-#	dh_undocumented
-	dh_installchangelogs 
-	dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-#	dh_makeshlibs
-	dh_md5sums
-	dh_builddeb
-
-source diff:                                                                  
-	@echo >&2 'source and diff are obsolete - use dpkg-source -b'; false
-
-binary: binary-indep binary-arch
-.PHONY: build clean binary-indep binary-arch binary
+DESTDIR     = $(CURDIR)/debian/catdoc
 
 DEBVERS    ?= $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
 VERSION    ?= $(shell echo '$(DEBVERS)' | sed 's/^[[:digit:]]*://; s/[-].*//')
 DEBPKGNAME ?= $(shell dpkg-parsechangelog | sed -n -e 's/^Source: //p')
 GITCOMMIT  ?= $(shell echo '$(VERSION)' | \
               sed -e 's/.*[+~]git[[:digit:]]*\.\([[:xdigit:]]*\).*/\1/')
+
+%:
+	dh $@
+
+override_dh_auto_configure:
+	dh_auto_configure -- --with-install-root=$(DESTDIR)
+
+override_dh_auto_install:
+	echo $(LDFLAGS)
+	dh_auto_install
+	install -d $(DESTDIR)/usr/lib/mime/packages
+	install -m 644 debian/mime $(DESTDIR)/usr/lib/mime/packages/catdoc
+	install -m 644 debian/catdocrc $(DESTDIR)/etc/catdocrc
+
+override_dh_auto_clean:
+	dh_auto_clean
+	$(RM) doc/catdoc.ps doc/catppt.ps doc/xls2csv.ps
+	$(RM) doc/catdoc.txt doc/catppt.txt doc/xls2csv.txt
+	$(RM) config.status config.log config.cache src/config.h
+	$(RM) doc/catdoc.1 doc/catppt.1 doc/wordview.1
+	$(RM) doc/xls2csv.1 doc/build
 
 gen-orig-tgz:
 	if [ ! -f ../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ] ; then \

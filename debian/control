@@ -1,28 +1,25 @@
 Source: catdoc
 Section: text
 Priority: optional
-Maintainer: Nick Bane <nick@enomem.co.uk>
-Build-Depends: debhelper (>> 7.0.0), tk
-Standards-Version: 3.9.3
+Maintainer: Martín Ferrari <tincho@debian.org>
+Build-Depends: debhelper (>> 9.0.0), tk
+Standards-Version: 3.9.6
 
 Package: catdoc
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Suggests: tk | wish
-Homepage: http://freshmeat.net/projects/catdoc
-Description: MS-Word to TeX or plain text converter
- This program extracts text from MS-Word files, trying to preserve
- as many special printable characters as possible. catdoc supports
- everything up to Word-97. Also supported are MS Write documents and RTF
- files.
+Homepage: http://www.wagner.pp.ru/~vitus/software/catdoc/
+Description: Convert Word, Excel, and PowerPoint files to plain text
+ The catdoc program reads one or more Microsoft word files and outputs text,
+ contained insinde them to standard output.
  .
- It doesn't even try to preserve fancy Word formatting, because
- Word users usually don't care about document structure, and it is
- this very thing which is important to LaTeX users.
+ It is now accompanied by xls2csv, a program which converts Excel spreadsheet
+ into comma-separated value file, and catppt a utility to extract textual
+ information from Powerpoint files.
  .
- Also provided is xls2csv, which extracts data from Excel spreadsheets
- and outputs it in comma-separated-value format and catppt, which extracts
- data from PowerPoint presentations.
+ It doesn't try to preserve Word formatting, it's goal is to extract plain text
+ and allow you to read it and, probably, reformat with TeX.
  .
  This package suggests tk because it also includes wordview, an
  optional Tk-based GUI for catdoc.  The MIME config provided in this
