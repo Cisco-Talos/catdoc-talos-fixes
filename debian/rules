@@ -26,11 +26,7 @@ override_dh_auto_install:
 
 override_dh_auto_clean:
 	dh_auto_clean
-	$(RM) doc/catdoc.ps doc/catppt.ps doc/xls2csv.ps
-	$(RM) doc/catdoc.txt doc/catppt.txt doc/xls2csv.txt
 	$(RM) config.status config.log config.cache src/config.h
-	$(RM) doc/catdoc.1 doc/catppt.1 doc/wordview.1
-	$(RM) doc/xls2csv.1 doc/build
 
 gen-orig-tgz:
 	if [ ! -f ../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ] ; then \
