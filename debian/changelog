@@ -1,4 +1,4 @@
-catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) UNRELEASED; urgency=medium
+catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) unstable; urgency=medium
 
   * Start packaging from scratch, discard unmaintained and undocumented fork
     made by previous Debian maintainers. Closes: #615286.
@@ -7,8 +7,12 @@ catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) UNRELEASED; urgency=medium
   * Reinstate original upstream. Closes: #393854.
   * Repackage upstream to solve licensing issues with charset files.
     Closes: #803033.
+  * Patch autoconf files to fix some issues and lintian warnings. Update
+    configure script too.
+  * Stop installing the broken xlsview script.
+    Closes: #409667, #367315, #309991.
 
- -- Martín Ferrari <tincho@debian.org>  Tue, 22 Dec 2015 16:37:09 -0300
+ -- Martín Ferrari <tincho@debian.org>  Wed, 23 Dec 2015 12:31:45 -0300
 
 catdoc (0.94.4-1.1) unstable; urgency=low
 
