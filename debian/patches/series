@@ -4,3 +4,4 @@ Refresh_autoconf.patch
 amd64_fixes.patch
 Bug#679877-Verify_bounds.patch
 Bug#766130-Suppress_write_protected_message.patch
+Bug#797029-Fix_format_a4_redefined_messages.patch
