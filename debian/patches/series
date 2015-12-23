@@ -2,3 +2,4 @@ Fix_manpage_section.patch
 Fix_autoconf_issues.patch
 Refresh_autoconf.patch
 amd64_fixes.patch
+Bug#679877-Verify_bounds.patch
