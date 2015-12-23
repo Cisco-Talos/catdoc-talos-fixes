@@ -2,6 +2,8 @@ catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) UNRELEASED; urgency=medium
 
   * Add VCS-* fields.
   * Fix an out-of-bounds access in ole_readdir. Closes: #679877.
+  * Suppress "File is write protected" message, thanks to Olly Betts for the
+    patch. Closes: #766130.
 
  -- Martín Ferrari <tincho@debian.org>  Wed, 23 Dec 2015 15:44:19 +0000
 

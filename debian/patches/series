@@ -3,3 +3,4 @@ Fix_autoconf_issues.patch
 Refresh_autoconf.patch
 amd64_fixes.patch
 Bug#679877-Verify_bounds.patch
+Bug#766130-Suppress_write_protected_message.patch
