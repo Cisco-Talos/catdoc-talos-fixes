@@ -1,3 +1,10 @@
+catdoc (1:0.94.3~git20151007.fd634c2+dfsg-3) UNRELEASED; urgency=medium
+
+  * Fix bug introduced when fixing #679877 that rendered catdoc mostly useless.
+    Closes: #808893.
+
+ -- Martín Ferrari <tincho@debian.org>  Tue, 29 Dec 2015 09:28:06 -0300
+
 catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) unstable; urgency=medium
 
   * Add VCS-* fields.

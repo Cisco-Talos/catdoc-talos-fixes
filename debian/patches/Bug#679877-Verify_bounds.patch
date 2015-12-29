@@ -7,7 +7,7 @@ some files trigger invalid memory accesses.
  			return NULL;
  		}
  		while(1) {
-+			if(chainCurrent <= 0 ||
++			if(chainCurrent < 0 ||
 +			   chainCurrent >= (
 +                               e->isBigBlock ?
 +                               ((bbdNumBlocks*sectorSize)/4) :
