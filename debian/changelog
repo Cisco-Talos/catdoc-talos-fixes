@@ -1,3 +1,10 @@
+catdoc (1:0.94.3~git20151007.fd634c2+dfsg-4) UNRELEASED; urgency=medium
+
+  * Add patch to correctly decode some floating point numbers, thanks to Olly
+    Betts for the patch. Closes: #692075.
+
+ -- Martín Ferrari <tincho@debian.org>  Wed, 13 Jan 2016 22:04:04 +0000
+
 catdoc (1:0.94.3~git20151007.fd634c2+dfsg-3) unstable; urgency=medium
 
   * Fix bug introduced when fixing #679877 that rendered catdoc mostly useless.

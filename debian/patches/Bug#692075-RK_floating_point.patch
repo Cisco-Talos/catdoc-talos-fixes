@@ -1,0 +1,25 @@
+Description: The decoding of RK floating point values in xls2csv is wrong - the
+    wrong 2 bits are cleared.  On little-endian machines the effect is that
+    xls2csv adds some bogus extra digits at the end of the value - the example
+    I noticed this with shows "12.340009765625" when the correct value is
+    "12.34".
+Author: Olly Betts <olly@survex.com>
+Forwarded: no
+Last-Update: 2016-01-13
+
+--- a/src/xlsparse.c
++++ b/src/xlsparse.c
+@@ -729,11 +729,11 @@
+ # ifdef WORDS_BIGENDIAN     
+ 		for(s=rec+4,d=dconv.cc,i=0; i<4;i++) 
+ 			*(d++)=*(--s);
+-		dconv.cc[0]=dconv.cc[0] & 0xfc;
++		dconv.cc[3]=dconv.cc[3] & 0xfc;
+ # else       
+ 		for(s=rec,d=dconv.cc+4,i=0;
+ 				i<4;i++) *(d++)=*(s++);
+-		dconv.cc[3]=dconv.cc[3] & 0xfc;
++		dconv.cc[4]=dconv.cc[4] & 0xfc;
+ # endif     
+ 		value=dconv.d;
+ 	}
