@@ -5,11 +5,10 @@ export DH_OPTIONS
 
 DESTDIR     = $(CURDIR)/debian/catdoc
 
-DEBVERS    ?= $(shell dpkg-parsechangelog | sed -n -e 's/^Version: //p')
+DEBVERS    ?= $(shell dpkg-parsechangelog | sed -n 's/^Version: //p')
 VERSION    ?= $(shell echo '$(DEBVERS)' | sed 's/^[[:digit:]]*://; s/[-].*//')
-DEBPKGNAME ?= $(shell dpkg-parsechangelog | sed -n -e 's/^Source: //p')
-GITCOMMIT  ?= $(shell echo '$(VERSION)' | \
-              sed -e 's/.*[+~]git[[:digit:]]*\.\([[:xdigit:]]*\).*/\1/')
+DEBPKGNAME ?= $(shell dpkg-parsechangelog | sed -n 's/^Source: //p')
+GITTAG     ?= upstream/$(shell echo '$(VERSION)' | sed 's/[~^:]/./g')
 
 %:
 	dh $@
@@ -31,6 +30,6 @@ override_dh_auto_clean:
 gen-orig-tgz:
 	if [ ! -f ../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ] ; then \
 	    git archive --format=tar.gz --prefix=$(DEBPKGNAME)-$(VERSION)/ \
-	        $(GITCOMMIT) >../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ; \
+	        $(GITTAG) >../$(DEBPKGNAME)_$(VERSION).orig.tar.gz; \
 	fi
 
