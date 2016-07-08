@@ -1,8 +1,1 @@
-Fix_manpage_section.patch
-Fix_autoconf_issues.patch
-Refresh_autoconf.patch
-amd64_fixes.patch
-Bug#679877-Verify_bounds.patch
-Bug#766130-Suppress_write_protected_message.patch
-Bug#797029-Fix_format_a4_redefined_messages.patch
-Bug#692075-RK_floating_point.patch
+01-amd64_fixes.patch

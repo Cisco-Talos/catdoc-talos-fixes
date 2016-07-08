@@ -1,8 +1,0 @@
---- a/doc/wordview.1.in
-+++ b/doc/wordview.1.in
-@@ -1,4 +1,4 @@
--.TH wordview 1x  "Version @catdoc_version@" "MS-Word reader"
-+.TH wordview 1  "Version @catdoc_version@" "MS-Word reader"
- .SH NAME
- wordview \- displays text contained in MS-Word file in X window
- 
