@@ -1,0 +1,4 @@
+version=3
+
+http://www.wagner.pp.ru/~vitus/software/catdoc/archive.html \
+(?:.*/)?catdoc-(\d[\d\.]*(?:rc\d*)?)\.tar\.gz
