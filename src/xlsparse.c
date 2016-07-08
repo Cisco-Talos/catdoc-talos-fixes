@@ -49,11 +49,13 @@ void do_table(FILE *input,char *filename) {
 			if (reclen==8 || reclen==16) {
 				if (biff_version == 0x0809 ) {
 					itemsread=catdoc_read(rec,4,1,input);
+					if (itemsread == 0) 
+						break;
 					build_year=getshort(rec+2,0);
 					build_rel=getshort(rec,0);
 					(void) build_rel;
 					if(build_year > 5 ) {
-						itemsread=catdoc_read(rec,8,1,input);
+						catdoc_read(rec,8,1,input);
 						biff_version=8;
 						offset=12;
 					}
@@ -86,19 +88,20 @@ void do_table(FILE *input,char *filename) {
 	}    
 	while(itemsread){
 		unsigned char buffer[2];
-		rectype = 0;
+
 		itemsread = catdoc_read(buffer, 2, 1, input);
 		if (catdoc_eof(input)) {
 			process_item(MSEOF,0,NULL);
 			return;
 		}
 		
-		rectype=getshort(buffer,0);
 		if(itemsread == 0)
 			break;
-		reclen=0;
 
+		rectype=getshort(buffer,0);
 		itemsread = catdoc_read(buffer, 2, 1, input);
+		if(itemsread == 0)
+			break;
 		reclen=getshort(buffer,0);
 		if (reclen && reclen <MAX_MS_RECSIZE &&reclen >0){
 			itemsread = catdoc_read(rec, 1, reclen, input);
@@ -144,11 +147,9 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		exit(69);
 		break;
 	}
-	case WRITEPROT: {
-		fprintf(stderr,"File is write protected\n");
+	case WRITEPROT: 
+		/* File is write protected, but we only read it */
 		break;
-	}
-		
 	case 0x42: {
 		if (source_charset) break;
 		codepage=getshort(rec,0);
@@ -440,7 +441,6 @@ unsigned char *copy_unicode_string (unsigned char **src) {
 		count=**src;
 		flags = *(*src+offset);
 		offset --;
-		flags = *(*src+1+offset);
 		if (! ( flags == 0 || flags == 1 || flags == 8 || flags == 9 ||
 						flags == 4 || flags == 5 || flags == 0x0c || flags == 0x0d ) ) {
 			/* 			fprintf(stderr,"Strange flags = %d, returning NULL\n", flags); */
@@ -520,7 +520,6 @@ unsigned char *copy_unicode_string (unsigned char **src) {
 			}
 			d=dest+l;
 			strcpy((char *)d,(char *)c);
-			d+=dl;
 			l+=dl;
 		}      
 	}
@@ -544,20 +543,20 @@ int BuiltInDateFormatIdx (int index) {
 	/* 0 is used as false -- format not found */
 	if ((index>= 0x0E) && (index<=0x16)) {
 		return offset+index-0x0E;
-	} else 	
+	} else {
 		if ((index>=0x2d) && (index<=0x2F)) {
 			return offset+index-0x2d+9;
-		} else if (index==0xa4) {	
-			return 12+offset;
-		} else 	
+		} else { 	
 			return 0;
+		}
+	}
 }	
 
 /* 
  * GetBuiltInDateFormat stores and returns
  * built in xls2csv strftime formats.
  */
-#define NUMOFDATEFORMATS 13
+#define NUMOFDATEFORMATS 12
 char *GetBuiltInDateFormat(int dateindex) {
 	static char *formats[]={
 		/* reserved  */ NULL, /* BuiltInDateFormatIdx use dateindex=0 as flag format not found */
@@ -573,7 +572,9 @@ char *GetBuiltInDateFormat(int dateindex) {
 		/* 0x2d */ "%M:%S",		/* 10 */
 		/* 0x2e */ "%H:%M:%S",		/* 11 */
 		/* 0x2f */ "%M:%S",		/* 12 */
+#if 0
 		/* 0xa4 */ "%m.%d.%Y %l:%M:%S %p"	/* 13 */
+#endif
 	};
 	if (dateindex>0 && dateindex <= NUMOFDATEFORMATS) {
 	  return formats[dateindex];
@@ -725,11 +726,11 @@ char* format_rk(unsigned char *rec,short int format_code) {
 # ifdef WORDS_BIGENDIAN     
 		for(s=rec+4,d=dconv.cc,i=0; i<4;i++) 
 			*(d++)=*(--s);
-		dconv.cc[0]=dconv.cc[0] & 0xfc;
+		dconv.cc[3]=dconv.cc[3] & 0xfc;
 # else       
 		for(s=rec,d=dconv.cc+4,i=0;
 				i<4;i++) *(d++)=*(s++);
-		dconv.cc[3]=dconv.cc[3] & 0xfc;
+		dconv.cc[4]=dconv.cc[4] & 0xfc;
 # endif     
 		value=dconv.d;
 	}
@@ -761,7 +762,7 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	unsigned char **parsedString;/*pointer into parsed array*/ 
 			
 	sstsize = getlong(sstbuf+4,0);
-	sst=malloc(sstsize*sizeof(char *));
+	sst=(unsigned char **)malloc(sstsize*sizeof(unsigned char *));
 	
 	if (sst == NULL) {
 		perror("SST allocation error");

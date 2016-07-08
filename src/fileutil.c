@@ -99,16 +99,19 @@ char *find_file(char *name, const char *path)
 /************************************************************************/
 int check_charset(char **filename,const char *charset) {
 	char *tmppath;
+	if (charset == NULL ) {
+		return 0;
+	}
 	if (!strncmp(charset,"utf-8",6)) {
 		*filename=strdup("utf-8");
 		return 1;
 	}   
 	tmppath=find_file(stradd(charset,CHARSET_EXT),charset_path);
-	if (tmppath&& *tmppath) {
-		*filename=strdup(charset);
-		free(tmppath);
-		return 1;
-	}
+	if (tmppath && *tmppath) {
+			*filename=strdup(charset);
+			free(tmppath);
+			return 1;
+	} 
 	return 0;
 }
 
@@ -176,14 +179,16 @@ void list_charsets(void) {
 	char *q;
 	char path_buf[PATH_BUF_SIZE];
 	char dir_sep[2]={DIR_SEP,0};
+	char **ptr;
 #ifdef __MSDOS__
 	struct ffblk ffblock;
 	int res,col;
 #else
 	glob_t glob_buf;
 	int count,glob_flags=GLOB_ERR;
+
+	memset(&glob_buf,0,sizeof(glob_t));
 #endif
-	char **ptr;
 	for (p=charset_path;p;p=(q?(q+1):NULL)) {
 		q=strchr(p,LIST_SEP);
 		if (q) {
