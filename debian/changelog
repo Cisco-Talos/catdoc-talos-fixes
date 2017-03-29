@@ -1,6 +1,6 @@
 catdoc (1:0.95-1) UNRELEASED; urgency=medium
 
-  * New upstream release.
+  * New upstream release. Closes: #810883.
   * Drop already applied patches.
   * Add debian/watch file.
   * debian/control: Update Standards-Version with no changes.
