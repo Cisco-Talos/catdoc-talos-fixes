@@ -7,6 +7,7 @@ catdoc (1:0.95-1) UNRELEASED; urgency=medium
   * debian/copyright: Add upstream's contact email. Closes: #842285.
   * debian/control: Improve package description, thanks to Justin B Rye for the
     patch. Closes: #815109.
+  * debian/control: Move Homepage to source section.
 
  -- Martín Ferrari <tincho@debian.org>  Fri, 08 Jul 2016 18:26:20 +0100
 
