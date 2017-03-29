@@ -4,6 +4,7 @@ catdoc (1:0.95-1) UNRELEASED; urgency=medium
   * Drop already applied patches.
   * Add debian/watch file.
   * debian/control: Update Standards-Version with no changes.
+  * debian/copyright: Add upstream's contact email. Closes: #842285.
 
  -- Martín Ferrari <tincho@debian.org>  Fri, 08 Jul 2016 18:26:20 +0100
 
