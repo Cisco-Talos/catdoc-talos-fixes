@@ -1,4 +1,4 @@
-catdoc (1:0.95-1) UNRELEASED; urgency=medium
+catdoc (1:0.95-1) unstable; urgency=medium
 
   * New upstream release. Closes: #810883.
   * Drop already applied patches.
@@ -9,7 +9,7 @@ catdoc (1:0.95-1) UNRELEASED; urgency=medium
     patch. Closes: #815109.
   * debian/control: Move Homepage to source section.
 
- -- Martín Ferrari <tincho@debian.org>  Fri, 08 Jul 2016 18:26:20 +0100
+ -- Martín Ferrari <tincho@debian.org>  Wed, 29 Mar 2017 19:09:42 +0000
 
 catdoc (1:0.94.3~git20160113.dbc9ec6+dfsg-1) unstable; urgency=medium
 
