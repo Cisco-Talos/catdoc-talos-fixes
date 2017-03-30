@@ -1,0 +1,11 @@
+Dump already extracted data before complaining and freeing memory.
+--- a/src/xlsparse.c
++++ b/src/xlsparse.c
+@@ -366,6 +366,7 @@
+ 	case BOF: {
+ 		if (rowptr) {
+ 			fprintf(stderr,"BOF when current sheet is not flushed\n");
++                        print_sheet();
+ 			free_sheet();
+ 		}
+ 		break;

@@ -1,3 +1,10 @@
+catdoc (1:0.95-2) UNRELEASED; urgency=medium
+
+  * Reenable patch that was disabled by mistake.
+  * Add patch for "BOF when current sheet is not flushed" messages.
+
+ -- Martín Ferrari <tincho@debian.org>  Thu, 30 Mar 2017 07:17:29 +0100
+
 catdoc (1:0.95-1) unstable; urgency=medium
 
   * New upstream release. Closes: #810883.
