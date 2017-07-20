@@ -1,3 +1,13 @@
+catdoc (1:0.95-3) UNRELEASED; urgency=high
+
+  [ Salvatore Bonaccorso ]
+  * CVE-2017-11110: Heap buffer overflow in ole_init. Closes: #867717.
+
+  [ Martín Ferrari ]
+  * Incorporate NMU patch, with thanks to Salvatore Bonaccorso.
+
+ -- Salvatore Bonaccorso <carnil@debian.org>  Thu, 20 Jul 2017 06:32:01 +0200
+
 catdoc (1:0.95-2) unstable; urgency=medium
 
   * Re-enable patch that was disabled by mistake.

@@ -2,3 +2,4 @@
 02-Fail_on_build_failure.patch
 03-Type_fixes.patch
 04-XLS_parsing_improvements.patch
+05-CVE-2017-11110.patch
