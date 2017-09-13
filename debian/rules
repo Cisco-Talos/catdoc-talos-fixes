@@ -1,14 +1,8 @@
 #!/usr/bin/make -f
 
-export DH_OPTIONS
 #export DH_VERBOSE=1
 
 DESTDIR     = $(CURDIR)/debian/catdoc
-
-DEBVERS    ?= $(shell dpkg-parsechangelog | sed -n 's/^Version: //p')
-VERSION    ?= $(shell echo '$(DEBVERS)' | sed 's/^[[:digit:]]*://; s/[-].*//')
-DEBPKGNAME ?= $(shell dpkg-parsechangelog | sed -n 's/^Source: //p')
-GITTAG     ?= upstream/$(shell echo '$(VERSION)' | sed 's/[~^:]/./g')
 
 %:
 	dh $@
@@ -21,15 +15,7 @@ override_dh_auto_install:
 	dh_auto_install
 	install -d $(DESTDIR)/usr/lib/mime/packages
 	install -m 644 debian/mime $(DESTDIR)/usr/lib/mime/packages/catdoc
-	install -m 644 debian/catdocrc $(DESTDIR)/etc/catdocrc
 
 override_dh_auto_clean:
 	dh_auto_clean
 	$(RM) config.status config.log config.cache src/config.h
-
-gen-orig-tgz:
-	if [ ! -f ../$(DEBPKGNAME)_$(VERSION).orig.tar.gz ] ; then \
-	    git archive --format=tar.gz --prefix=$(DEBPKGNAME)-$(VERSION)/ \
-	        $(GITTAG) >../$(DEBPKGNAME)_$(VERSION).orig.tar.gz; \
-	fi
-

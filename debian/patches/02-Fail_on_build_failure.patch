@@ -1,5 +1,4 @@
-Without this patch, failures in nested make calls are ignored.
-
+Description: Without this patch, failures in nested make calls are ignored.
 --- a/Makefile.in
 +++ b/Makefile.in
 @@ -6,19 +6,23 @@

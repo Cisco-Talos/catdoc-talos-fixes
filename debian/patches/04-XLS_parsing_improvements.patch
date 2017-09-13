@@ -1,10 +1,10 @@
-Improve the XLS parsing:
-* Don't stop processing after an EOF which is not followed by a BOF, as there
-  are many records that can appear after it (like a graph).
-* On unexpected BOF record, dump already extracted data before complaining and
-  freeing memory.
-* Accept different versions of BOF and XF records.
-* Add more #defines for record types.
+Description: Improve the XLS parsing:
+ * Don't stop processing after an EOF which is not followed by a BOF, as there
+   are many records that can appear after it (like a graph).
+ * On unexpected BOF record, dump already extracted data before complaining and
+   freeing memory.
+ * Accept different versions of BOF and XF records.
+ * Add more #defines for record types.
 
 --- a/src/xlsparse.c
 +++ b/src/xlsparse.c

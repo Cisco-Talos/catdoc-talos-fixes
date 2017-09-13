@@ -1,3 +1,9 @@
+catdoc (1:0.95-4) UNRELEASED; urgency=medium
+
+  * Automated fixes from cme, and some cleanup.
+
+ -- Martín Ferrari <tincho@debian.org>  Wed, 13 Sep 2017 20:33:26 +0000
+
 catdoc (1:0.95-3) unstable; urgency=high
 
   [ Salvatore Bonaccorso ]

@@ -1,4 +1,4 @@
-Format: http://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: catdoc
 Upstream-Contact: Victor Wagner <vitus@wagner.pp.ru>
 Source: http://www.wagner.pp.ru/~vitus/software/catdoc/

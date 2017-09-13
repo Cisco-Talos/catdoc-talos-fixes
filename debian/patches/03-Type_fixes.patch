@@ -1,4 +1,4 @@
-Use correct types for some on-disk structures.
+Description: Use correct types for some on-disk structures.
 --- a/src/xlsparse.c
 +++ b/src/xlsparse.c
 @@ -33,8 +33,8 @@
