@@ -1,0 +1,63 @@
+Description: A few fixes to the Makefiles.
+ * Stop ignoring failures in nested make calls.
+ * Create missing man1 directories.
+ * Don't link against libm.
+
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -6,19 +6,23 @@
+ tardir=${PACKAGE_TARNAME}-${PACKAGE_VERSION}
+ 
+ all:
++	set -e;\
+ 	for i in src doc charsets; do\
+ 	   (cd $$i; $(MAKE) all);\
+ 	done
+ 
+ install:
++	set -e;\
+ 	for i in src doc charsets; do\
+ 	   (cd $$i; $(MAKE) install);\
+ 	done
+ clean:	
++	set -e;\
+ 	for i in src doc charsets; do\
+ 	   (cd $$i; $(MAKE) clean);\
+ 	done
+ distclean:	
++	set -e;\
+ 	for i in src doc charsets; do\
+ 	   (cd $$i; $(MAKE) distclean);\
+ 	done
+--- a/doc/Makefile.in
++++ b/doc/Makefile.in
+@@ -30,12 +30,12 @@
+             wordview.txt wordview.ps build
+ install: @installtargets@
+ install-catdoc: catdoc.1 xls2csv.1 catppt.1
+-	../mkinstalldirs $(installroot)$(mandir)
++	../mkinstalldirs $(installroot)$(mandir)/man1
+ 	$(INSTALL) -m 644 catdoc.1 $(installroot)$(mandir)/man1/catdoc.1
+ 	$(INSTALL) -m 644 xls2csv.1 $(installroot)$(mandir)/man1/xls2csv.1
+ 	$(INSTALL) -m 644 catppt.1 $(installroot)$(mandir)/man1/catppt.1
+ install-wordview:	
+-	../mkinstalldirs $(installroot)$(mandir)
++	../mkinstalldirs $(installroot)$(mandir)/man1
+ 	$(INSTALL) -m 644 wordview.1 $(installroot)$(mandir)/man1/wordview.1
+ distclean: clean
+ 	$(RM)  Makefile catdoc.1 xls2csv.1 catppt.1 wordview.1
+--- a/src/Makefile.in
++++ b/src/Makefile.in
+@@ -77,10 +77,10 @@
+ catdoc: $(OBJ)
+ 	$(CC)  -o catdoc  $(OBJ) $(LDFLAGS)
+ xls2csv: $(OBJXLS)
+-	$(CC) -o xls2csv $(OBJXLS) -lm $(LDFLAGS)
++	$(CC) -o xls2csv $(OBJXLS) $(LDFLAGS)
+ 
+ catppt: $(OBJPPT)
+-	$(CC) -o catppt $(OBJPPT) -lm $(LDFLAGS)
++	$(CC) -o catppt $(OBJPPT) $(LDFLAGS)
+ 
+ install: @installtargets@
+ install-catdoc:catdoc xls2csv catppt 
