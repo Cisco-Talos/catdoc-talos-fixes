@@ -46,18 +46,3 @@ Description: A few fixes to the Makefiles.
  	$(INSTALL) -m 644 wordview.1 $(installroot)$(mandir)/man1/wordview.1
  distclean: clean
  	$(RM)  Makefile catdoc.1 xls2csv.1 catppt.1 wordview.1
---- a/src/Makefile.in
-+++ b/src/Makefile.in
-@@ -77,10 +77,10 @@
- catdoc: $(OBJ)
- 	$(CC)  -o catdoc  $(OBJ) $(LDFLAGS)
- xls2csv: $(OBJXLS)
--	$(CC) -o xls2csv $(OBJXLS) -lm $(LDFLAGS)
-+	$(CC) -o xls2csv $(OBJXLS) $(LDFLAGS)
- 
- catppt: $(OBJPPT)
--	$(CC) -o catppt $(OBJPPT) -lm $(LDFLAGS)
-+	$(CC) -o catppt $(OBJPPT) $(LDFLAGS)
- 
- install: @installtargets@
- install-catdoc:catdoc xls2csv catppt 

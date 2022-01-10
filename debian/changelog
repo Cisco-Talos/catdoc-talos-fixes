@@ -1,3 +1,20 @@
+catdoc (1:0.95-4.2) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Remove the Debian menu file: the Debian menu is long deprecated, and
+    Wordview is a very niche tool; a desktop file might be added, if needed
+    or requested.
+
+ -- Pino Toscano <pino@debian.org>  Sat, 09 Oct 2021 11:41:56 +0200
+
+catdoc (1:0.95-4.1) unstable; urgency=medium
+
+  * Non-maintainer upload.
+  * Restore -lm when linking programs as it's needed for rint() on some
+    architectures. Closes: #876673
+
+ -- Olly Betts <olly@survex.com>  Mon, 06 Nov 2017 11:48:29 +1300
+
 catdoc (1:0.95-4) unstable; urgency=medium
 
   * Automated fixes from cme, and some cleanup.
