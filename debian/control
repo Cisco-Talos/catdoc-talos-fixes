@@ -2,12 +2,13 @@ Source: catdoc
 Maintainer: Martina Ferrari <tina@debian.org>
 Section: text
 Priority: optional
-Build-Depends: debhelper (>> 9.0.0),
+Build-Depends: debhelper-compat (= 13),
                tk,
-Standards-Version: 4.1.0
-Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/catdoc.git
-Vcs-Git: https://anonscm.debian.org/git/collab-maint/catdoc.git
+Rules-Requires-Root: no
+Standards-Version: 4.6.0
 Homepage: http://www.wagner.pp.ru/~vitus/software/catdoc/
+Vcs-Browser: https://salsa.debian.org/debian/catdoc
+Vcs-Git: https://salsa.debian.org/debian/catdoc.git
 
 Package: catdoc
 Architecture: any
@@ -25,7 +26,7 @@ Description: text extractor for MS-Office files
  It doesn't try to preserve Word formatting; its goal is to extract plain
  text and allow you to read it (and, probably, reformat it with TeX).
  .
- This package suggests tk because it also includes wordview, an
+ This package suggests Tk because it also includes wordview, an
  optional Tk-based GUI for catdoc.  The MIME config provided in this
  package will use wordview if X is running, or catdoc directly if it
  is not.
