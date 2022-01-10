@@ -21,17 +21,17 @@ catdoc (1:0.95-4) unstable; urgency=medium
   * Add some more Makefile fixes.
   * Fix opening some LibreOffice docuemnts. Closes: 874048.
 
- -- Martín Ferrari <tincho@debian.org>  Wed, 13 Sep 2017 21:03:58 +0000
+ -- Martina Ferrari <tina@debian.org>  Wed, 13 Sep 2017 21:03:58 +0000
 
 catdoc (1:0.95-3) unstable; urgency=high
 
   [ Salvatore Bonaccorso ]
   * CVE-2017-11110: Heap buffer overflow in ole_init. Closes: #867717.
 
-  [ Martín Ferrari ]
+  [ Martina Ferrari ]
   * Incorporate NMU patch, with thanks to Salvatore Bonaccorso.
 
- -- Martín Ferrari <tincho@debian.org>  Thu, 20 Jul 2017 22:20:04 +0000
+ -- Martina Ferrari <tina@debian.org>  Thu, 20 Jul 2017 22:20:04 +0000
 
 catdoc (1:0.95-2) unstable; urgency=medium
 
@@ -39,7 +39,7 @@ catdoc (1:0.95-2) unstable; urgency=medium
   * Add patches to improve XLS parsing in a few different cases.
   * Fix Makefile to properly bail on build failures.
 
- -- Martín Ferrari <tincho@debian.org>  Fri, 19 May 2017 12:16:07 +0200
+ -- Martina Ferrari <tina@debian.org>  Fri, 19 May 2017 12:16:07 +0200
 
 catdoc (1:0.95-1) unstable; urgency=medium
 
@@ -52,7 +52,7 @@ catdoc (1:0.95-1) unstable; urgency=medium
     patch. Closes: #815109.
   * debian/control: Move Homepage to source section.
 
- -- Martín Ferrari <tincho@debian.org>  Wed, 29 Mar 2017 19:09:42 +0000
+ -- Martina Ferrari <tina@debian.org>  Wed, 29 Mar 2017 19:09:42 +0000
 
 catdoc (1:0.94.3~git20160113.dbc9ec6+dfsg-1) unstable; urgency=medium
 
@@ -61,14 +61,14 @@ catdoc (1:0.94.3~git20160113.dbc9ec6+dfsg-1) unstable; urgency=medium
   * Add patch to correctly decode some floating point numbers, thanks to Olly
     Betts for the patch. Closes: #692075.
 
- -- Martín Ferrari <tincho@debian.org>  Wed, 13 Jan 2016 22:33:43 +0000
+ -- Martina Ferrari <tina@debian.org>  Wed, 13 Jan 2016 22:33:43 +0000
 
 catdoc (1:0.94.3~git20151007.fd634c2+dfsg-3) unstable; urgency=medium
 
   * Fix bug introduced when fixing #679877 that rendered catdoc mostly useless.
     Closes: #808893.
 
- -- Martín Ferrari <tincho@debian.org>  Tue, 29 Dec 2015 12:38:12 +0000
+ -- Martina Ferrari <tina@debian.org>  Tue, 29 Dec 2015 12:38:12 +0000
 
 catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) unstable; urgency=medium
 
@@ -79,7 +79,7 @@ catdoc (1:0.94.3~git20151007.fd634c2+dfsg-2) unstable; urgency=medium
   * Suppress "Format a4 redefined" message, thanks to Olly Betts for the
     patch. Closes: #797029.
 
- -- Martín Ferrari <tincho@debian.org>  Wed, 23 Dec 2015 23:27:09 +0000
+ -- Martina Ferrari <tina@debian.org>  Wed, 23 Dec 2015 23:27:09 +0000
 
 catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) unstable; urgency=medium
 
@@ -95,7 +95,7 @@ catdoc (1:0.94.3~git20151007.fd634c2+dfsg-1) unstable; urgency=medium
   * Stop installing the broken xlsview script.
     Closes: #409667, #367315, #309991.
 
- -- Martín Ferrari <tincho@debian.org>  Wed, 23 Dec 2015 12:31:45 -0300
+ -- Martina Ferrari <tina@debian.org>  Wed, 23 Dec 2015 12:31:45 -0300
 
 catdoc (0.94.4-1.1) unstable; urgency=low
 

@@ -1,5 +1,5 @@
 Source: catdoc
-Maintainer: Martín Ferrari <tincho@debian.org>
+Maintainer: Martina Ferrari <tina@debian.org>
 Section: text
 Priority: optional
 Build-Depends: debhelper (>> 9.0.0),
