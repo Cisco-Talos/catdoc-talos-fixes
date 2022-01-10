@@ -282,7 +282,7 @@ catdoc (0.91.4-5) unstable; urgency=low
 
 catdoc (0.91.4-4) unstable; urgency=low
 
-  * Finally end transition to /usr/share. Fixed bug in wordview.tcl 
+  * Finally end transition to /usr/share. Fixed bug in wordview.tcl
   (thanks to Sacha)
 
  -- Peter Novodvorsky <nidd@debian.org>  Tue, 23 Jan 2001 23:40:39 +0300
@@ -306,7 +306,7 @@ catdoc (0.91.4-2) unstable; urgency=low
 catdoc (0.91.4-1) frozen unstable; urgency=medium
 
   * target frozen since this closes a release-critical bug
-  * new upstream version, has fixes for seg faults in xls2csv, seems to fix 
+  * new upstream version, has fixes for seg faults in xls2csv, seems to fix
     the TCL problem during 'save as' in wordview (at least, I can't reproduce
     the problem in this version), and fixes at least one man page problem.
     Closes: #60623, #54869, #56988, #54870
@@ -384,7 +384,7 @@ catdoc (0.90a2-0.1) unstable; urgency=low
 catdoc (0.33-3) frozen unstable; urgency=low
 
   * Doesn't call update-menu twice (bug #21604)
-  * Wordview uses wish instead of wish4.2 
+  * Wordview uses wish instead of wish4.2
   * Suggests wish, to make use of wordview
 
  -- Bjorn Brenander <bjorn@debian.org>  Sat,  2 May 1998 09:36:30 +0200
@@ -403,5 +403,3 @@ catdoc (0.33-1) unstable; urgency=low
   * Initial Release.
 
  -- Christoph Lameter <clameter@debian.org>  Fri, 27 Feb 1998 18:28:33 -0800
-
-
