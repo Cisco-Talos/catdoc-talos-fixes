@@ -1,3 +1,16 @@
+catdoc (1:0.95-5) UNRELEASED; urgency=medium
+
+  * Update my name and email address.
+  * d/control: Update compat, Standards-Version, and Vcs-*. Add Rules-
+    Requires-Root.
+  * d/changelog: Remove whitespace.
+  * d/copyright: Update years.
+  * Simplify d/rules.
+  * Add lintian overrides.
+  * Add d/gbp.conf.
+
+ -- Martina Ferrari <tina@debian.org>  Tue, 11 Jan 2022 00:08:27 +0000
+
 catdoc (1:0.95-4.2) unstable; urgency=medium
 
   * Non-maintainer upload.
