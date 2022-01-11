@@ -11,9 +11,7 @@ override_dh_auto_configure:
 	dh_auto_configure -- --with-install-root=$(DESTDIR)
 
 override_dh_auto_install:
-	echo $(LDFLAGS)
 	dh_auto_install
-	install -d $(DESTDIR)/usr/lib/mime/packages
 	install -m 644 debian/mime $(DESTDIR)/usr/lib/mime/packages/catdoc
 
 override_dh_auto_clean:
