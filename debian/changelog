@@ -1,6 +1,7 @@
 catdoc (1:0.95-6) UNRELEASED; urgency=medium
 
   * Update lintian override info to new format on line 1.
+  * Use secure URI in Homepage field.
 
  -- Debian Janitor <janitor@jelmer.uk>  Wed, 12 Oct 2022 14:18:52 -0000
 
