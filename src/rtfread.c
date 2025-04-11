@@ -169,10 +169,10 @@ int rtf_level=0;
  * Functions implementation
  * 
  */
-extern unsigned short int buffer[];
+extern unsigned short int buffer[];     // [ref] sized in reader.c:13
 void add_to_buffer(int *bufptr,unsigned short int c) {
-	buffer[++(*bufptr)]=c;
-	if (*bufptr >= PARAGRAPH_BUFFER-2) {
+	buffer[++(*bufptr)]=c;                  // [note] this looks like it can write oob
+	if (*bufptr >= PARAGRAPH_BUFFER-2) {    // [note] this case seeks forward to write a '\0' unnecessarily
 		buffer[++(*bufptr)]=0;
 		output_paragraph(buffer);
 		*bufptr=-1;
@@ -314,7 +314,7 @@ int parse_rtf(FILE *f) {
 		}
 		case '{':
 			group_count++;
-			if (group_count >= group_store ) {
+			if (group_count >= group_store ) {                  // [note] reallocs groups by +10 if larger than current size
 				group_store+=10;
 				if((groups=(RTFGroupData*)realloc(groups,
 												  group_store*sizeof(RTFGroupData)))
@@ -325,7 +325,7 @@ int parse_rtf(FILE *f) {
 			}
 			if (para_mode)
 				add_to_buffer(&bufptr,0x20);
-			groups[group_count]=groups[group_count-1];
+			groups[group_count]=groups[group_count-1];          // [note] what is the purpose of this copy?
 			break;
 		case '}':
 			group_count--;
@@ -393,17 +393,17 @@ int getRtfCommand(FILE *f, RTFcommand *command ) {
 	if (isalpha(c)) {
 		int name_count=1;
 		command->name[0]=(char)c;
-		while(isalpha(c=fgetc(f)) && name_count < RTFNAMEMAXLEN) {
+		while(isalpha(c=fgetc(f)) && name_count < RTFNAMEMAXLEN) {  // [note] can this be obo?
 			if(feof(f))
 				return 1;
 			command->name[name_count++]=(char)c;
 		}
-		command->name[name_count]='\0';
+		command->name[name_count]='\0';                             // [note] obo write?
 		command->type=getCommandType(command->name);
 /* 		command->args=NULL; */
 		ungetc(c,f);
 		if (isdigit(c) || c == '-' )
-			command->numarg=getNumber(f);
+			command->numarg=getNumber(f);                           // [note] can be signed
 		else
 			command->numarg=0;
 		c=fgetc(f);
@@ -415,12 +415,12 @@ int getRtfCommand(FILE *f, RTFcommand *command ) {
 /* 		command->args=NULL; */
 		if (c == '\'') {
 			command->type=RTF_CHAR;
-			command->numarg=getCharCode(f);
+			command->numarg=getCharCode(f);                         // [note] hex code
 			if(feof(f))
 				return -1;
 		} else {
 			command->type=RTF_SPEC_CHAR;
-			command->numarg=c;
+			command->numarg=c;                                      // [note] treat byte as numeric?
 		}
 	}
 	

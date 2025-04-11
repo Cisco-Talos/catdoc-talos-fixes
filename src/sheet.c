@@ -20,28 +20,28 @@ char *sheet_separator = "\f";
  * Allocates cell for given row and col and returns pointer to poitrer
  * of cell contents
  */ 
-unsigned char **allocate (int row,int col) {
+unsigned char **allocate (int row,int col) {            // [note] row and col are 16-bit
 	unsigned int newrow,newcol;
 	if (row>=lastrow) {
 		newrow=(row/16+1)*16;
-		rowptr=realloc(rowptr,newrow*sizeof(struct rowdescr));
+		rowptr=realloc(rowptr,newrow*sizeof(struct rowdescr));                  // [note] product overflow if newrow is unbounded
 		if (rowptr == NULL) {
 			perror("allocating sheet ");
 			exit(1);
 		}	
-		memset(rowptr+lastrow,0,(newrow-lastrow)*sizeof(struct rowdescr));
-		lastrow=newrow;
+		memset(rowptr+lastrow,0,(newrow-lastrow)*sizeof(struct rowdescr));      // [note] lastrow is a global
+		lastrow=newrow;     // [note] previous value gets assigned here
 	}
 	if (col>=rowptr[row].end) {
 		newcol=(col/16+1)*16;
 		rowptr[row].cells=
 		   (unsigned char**)realloc(rowptr[row].cells,
-		                            newcol*sizeof(unsigned char *));
+		                            newcol*sizeof(unsigned char *));            // [note] product overflow if newcol is unbounded
 		if (rowptr[row].cells == NULL) {
 			perror("allocating row");
 			exit(1);
 		}	
-		memset(rowptr[row].cells+rowptr[row].end,0,(newcol-rowptr[row].end)
+		memset(rowptr[row].cells+rowptr[row].end,0,(newcol-rowptr[row].end)     // [note] bo if diff between newcol and rowptr.end
 				*sizeof(char *));
 		rowptr[row].end=newcol;
 	}  
@@ -55,7 +55,7 @@ void free_sheet(void) {
 	int i,j;
 	struct rowdescr *row;
 	unsigned char **col;
-	for (row=rowptr,i=0;i<lastrow;i++,row++) {
+	for (row=rowptr,i=0;i<lastrow;i++,row++) {              // [note] mass-free of all cells and rows
 		if (!row->cells) continue;
 		for (col=row->cells,j=0;j<row->end;j++,col++) {
 			if (*col) {

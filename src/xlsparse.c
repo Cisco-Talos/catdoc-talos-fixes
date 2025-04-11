@@ -47,17 +47,17 @@ void do_table(FILE *input,char *filename) {
 		if ( biff_version == 0x0809 || biff_version == 0x0409 ||
 				 biff_version == 0x0209 || biff_version == 0x0009 ) {
 			if (reclen==8 || reclen==16) {
-				if (biff_version == 0x0809 ) {
+				if (biff_version == 0x0809 ) {              // [note] required biff version
 					itemsread=catdoc_read(rec,4,1,input);
 					if (itemsread == 0) 
 						break;
 					build_year=getshort(rec+2,0);
 					build_rel=getshort(rec,0);
 					(void) build_rel;
-					if(build_year > 5 ) {
+					if(build_year > 5 ) {                   // [note] required year
 						catdoc_read(rec,8,1,input);
 						biff_version=8;
-						offset=12;
+						offset=12;                          // [note] need to set this offset to 0xc
 					}
 					else {
 						biff_version=7;
@@ -72,7 +72,7 @@ void do_table(FILE *input,char *filename) {
 				} else {
 					biff_version=2;
 				}
-				itemsread=catdoc_read(rec,reclen-offset,1,input);
+				itemsread=catdoc_read(rec,reclen-offset,1,input);   // [note] underflow [XXX] this is guarded by ole_read
 				break;
 			} else {
 				fprintf(stderr,"%s: Invalid BOF record\n",filename);
@@ -103,7 +103,7 @@ void do_table(FILE *input,char *filename) {
 		if(itemsread == 0)
 			break;
 		reclen=getshort(buffer,0);
-		if (reclen && reclen <MAX_MS_RECSIZE &&reclen >0){
+		if (reclen && reclen <MAX_MS_RECSIZE &&reclen >0){      // [note] MAX_MS_RECSIZE is 18000
 			itemsread = catdoc_read(rec, 1, reclen, input);
 			rec[reclen] = '\0';
 		}
@@ -124,7 +124,7 @@ void do_table(FILE *input,char *filename) {
 }
 unsigned char **sst=NULL;/* Shared string table parsed into array of strings in
 														output encoding*/
-int sstsize = 0; /*Number of strings in SST*/
+int sstsize = 0; /*Number of strings in SST*/	// [note] sint32_t
 unsigned char *sstBuffer=NULL; /*Unparsed sst to accumulate all its parts*/
 int sstBytes = 0; /*Size of SST Data, already accumulated in the buffer */
 int codepage=1251; /*default*/
@@ -135,11 +135,11 @@ int prev_rectype=0;
 unsigned char **saved_reference = NULL;
 
 void process_item (int rectype, int reclen, unsigned char *rec) {
-	if (rectype != CONTINUE && prev_rectype == SST) {
+	if (rectype != CONTINUE && prev_rectype == SST) {				// [note] requires SST without a continue record
 		/* we have accumulated  unparsed SST, and now encountered
 		 * another record, which indicates that SST is ended */
 		/* fprintf(stderr,"parse sst!\n");*/
-		parse_sst(sstBuffer,sstBytes);
+		parse_sst(sstBuffer,sstBytes);                              // [note] this SST has a product overflow
 	}	
 	switch (rectype) {
 	case FILEPASS: {
@@ -193,26 +193,26 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		if (sst != NULL)
 			free(sst);
 		
-		sstBuffer=(unsigned char*)malloc(reclen);
+		sstBuffer=(unsigned char*)malloc(reclen);           // [note] direct control of record size?
 		sstBytes = reclen;
 		if (sstBuffer == NULL ) {
 			perror("SSTptr alloc error! ");
 			exit(1);
 		}	  
-		memcpy(sstBuffer,rec,reclen);
+		memcpy(sstBuffer,rec,reclen);			// [note] copies SST directly into sstBuffer
 		break;
 	}	
 	case CONTINUE: {
 		if (prev_rectype != SST) {
 			return; /* to avoid changing of prev_rectype;*/
 		}    
-		sstBuffer=realloc(sstBuffer,sstBytes+reclen);
+		sstBuffer=realloc(sstBuffer,sstBytes+reclen);       // [note] sstBytes are accumulated indefinitely
 		if (sstBuffer == NULL ) {
 			perror("SSTptr realloc error! ");
 			exit(1);
 		}	  
 		memcpy(sstBuffer+sstBytes,rec,reclen);
-		sstBytes+=reclen;
+		sstBytes+=reclen;                                   // [note] sstBytes accumulation and unbounded
 		return;
 	}			   
 	case LABEL: {
@@ -224,14 +224,14 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		row = getshort(rec,0); 
 		col = getshort(rec,2);
 		/* 		fprintf(stderr,"LABEL!\n"); */
-		pcell=allocate(row,col);
+		pcell=allocate(row,col);                            // [note] controlled allocation
 		*pcell=copy_unicode_string(&src);
 		break;
 	}     
 	case BLANK: { int row,col;unsigned char **pcell;
 			row = getshort(rec,0);
 			col = getshort(rec,2);
-			pcell=allocate(row,col);
+			pcell=allocate(row,col);                        // [note] controlled allocation
 			*pcell=NULL;
 			break;
 	}
@@ -241,7 +241,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		row = getshort(rec,0);
 		startcol = getshort(rec,2);
 		endcol=getshort(rec,reclen-2);
-		pcell=allocate(row,endcol);
+		pcell=allocate(row,endcol);                     // [note] controlled allocation
 		*pcell=NULL;
 		(void)startcol;
 		break;
@@ -258,7 +258,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		/* 									fprintf(stderr,"col=%d row=%d no=%d\n",col,row,string_no); */
 									
 		saved_reference=NULL;
-		pcell=allocate(row,col);
+		pcell=allocate(row,col);                        // [note] controlled allocation
 		if (string_no>=sstsize|| string_no < 0 ) {
 			fprintf(stderr,"string index out of boundary\n"); 
 			exit(1);	 
@@ -266,7 +266,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 			int len;
 			unsigned char *outptr;
 			len=strlen((char *)sst[string_no]);
-			outptr=*pcell=malloc(len+1);
+			outptr=*pcell=malloc(len+1);                // [note] useless addition overflow
 			strcpy((char *)outptr,(char *)sst[string_no]);
 		} else {
 			*pcell=malloc(1);
@@ -284,7 +284,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		saved_reference=NULL;
 		row = getshort(rec,0)-startrow; 
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=allocate(row,col);                        // [note] controlled allocation
 		*pcell=(unsigned char *)strdup(format_double(rec,6,getshort(rec,4)));
 		break;
 	}
@@ -294,7 +294,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 
 		row = getshort(rec,0)-startrow;
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=allocate(row,col);                        // [note] controlled allocation
 		*pcell=(unsigned char *)strdup(format_int(getshort(rec,7),getshort(rec,4)));		  
 		break;
 
@@ -306,7 +306,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		saved_reference=NULL;
 		row = getshort(rec,0)-startrow; 
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=allocate(row,col);                        // [note] controlled allocation
 		format_code = getshort(rec,4);
 		*pcell=(unsigned char *)strdup(format_rk(rec+6,format_code));
 		break;
@@ -320,7 +320,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		saved_reference=NULL;
 
 		for (offset=4,col=startcol;col<=endcol;offset+=6,col++) { 
-			pcell=allocate(row,col);
+			pcell=allocate(row,col);                        // [note] controlled allocation
 			format_code=getshort(rec,offset);
 			*pcell=(unsigned char *)strdup(format_rk(rec+offset+2,format_code));
 
@@ -333,7 +333,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 		saved_reference=NULL;
 		row = getshort(rec,0)-startrow; 
 		col = getshort(rec,2);
-		pcell=allocate(row,col);
+		pcell=allocate(row,col);                        // [note] controlled allocation
 		if (((unsigned char)rec[12]==0xFF)&&(unsigned char)rec[13]==0xFF) {
 			/* not a floating point value */
 			if (rec[6]==1) {
@@ -377,7 +377,7 @@ void process_item (int rectype, int reclen, unsigned char *rec) {
 			/* we are interested only in format index here */ 
 			if (formatTableIndex >= formatTableSize) {
 				formatTable=realloc(formatTable,
-														(formatTableSize+=16)*sizeof(short int));
+														(formatTableSize+=16)*sizeof(short int));   // [note] potential addition overflow
 					  	  
 				if (!formatTable) {
 					fprintf(stderr,"Out of memory for format table");
@@ -761,8 +761,8 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	unsigned char *barrier=(unsigned char *)sstbuf+bufsize; /*pointer to end of buffer*/
 	unsigned char **parsedString;/*pointer into parsed array*/ 
 			
-	sstsize = getlong(sstbuf+4,0);
-	sst=(unsigned char **)malloc(sstsize*sizeof(unsigned char *));
+	sstsize = getlong(sstbuf+4,0);		// [note] controlled size
+	sst=(unsigned char **)malloc(sstsize*sizeof(unsigned char *));      // [note] product overflow
 	
 	if (sst == NULL) {
 		perror("SST allocation error");
@@ -772,7 +772,7 @@ void parse_sst(unsigned char *sstbuf,int bufsize) {
 	for (i=0,parsedString=sst,curString=sstbuf+8;
 			 i<sstsize && curString<barrier; i++,parsedString++) {
 		/* 		fprintf(stderr,"copying %d string\n",i); */
-		*parsedString = copy_unicode_string(&curString);
+		*parsedString = copy_unicode_string(&curString);			// [note] writes allocated unistring to sst allocation
 	}       
 	/* 	fprintf(stderr,"end sst i=%d sstsize=%d\n",i,sstsize); */
 

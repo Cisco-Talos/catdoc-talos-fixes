@@ -24,7 +24,7 @@ int verbose=0;
  * return not 0 when error
  ********************************************************************/ 
 int analyze_format(FILE *f) {
-	unsigned char buffer[129];
+	unsigned char buffer[129];      // [note] clamped to 129 bytes
 	long offset=0;
 	FILE *new_file, *ole_file;
 	int ret_code=69;
@@ -44,20 +44,20 @@ int analyze_format(FILE *f) {
 		get_unicode_char=get_8bit_char;
 		return process_file(f,LONG_MAX);
 	} else if (strncmp((char *)&buffer,rtf_sign,4)==0) {
-		return parse_rtf(f);
+		return parse_rtf(f);                // [note] parse rtf might be worth checking out
 	} else if (strncmp((char *)&buffer, zip_sign,4) == 0) {
 		fprintf(stderr,"This file looks like ZIP archive or Office 2007 "
 		"or later file.\nNot supported by catdoc\n");
 		exit(1);
 	} else if (strncmp((char *)&buffer,old_word_sign,2)==0) {
 	   fread(buffer+4,1,124,f);	
-	   return parse_word_header(buffer,f,128,0);
+	   return parse_word_header(buffer,f,128,0);    // [note] reads header using old format
 	}	
 	fread(buffer+4,1,4,f);
 	if (strncmp((char *)&buffer,ole_sign,8)==0) {
 		if ((new_file=ole_init(f, buffer, 8)) != NULL) {
 			set_ole_func();
-			while((ole_file=ole_readdir(new_file)) != NULL) {
+			while((ole_file=ole_readdir(new_file)) != NULL) {   // [note] double-free here? [XXX} nope
 				int res=ole_open(ole_file);
 				if (res >= 0) {
 					if (strcmp(((oleEntry*)ole_file)->name , "WordDocument") == 0) {
@@ -65,7 +65,7 @@ int analyze_format(FILE *f) {
 						ret_code=parse_word_header(buffer,ole_file,-offset,offset);
 					}
 				} 
-				ole_close(ole_file);
+				ole_close(ole_file);    // [note] free(e->blocks) and free(e) [XXX} nope
 			}
 			set_std_func();
 			ole_finish();
@@ -160,8 +160,8 @@ int parse_word_header(unsigned char * buffer,FILE *f,int offset,long curpos) {
 		}
 	}
 	/* skipping to textstart and computing textend */
-	textstart=getlong(buffer,24);
-	textlen=getlong(buffer,28)-textstart;
+	textstart=getlong(buffer,24);                   // [note] these two sizes are both controlled
+	textlen=getlong(buffer,28)-textstart;           // [note] these two sizes are both controlled
 	textstart+=offset;
 	if (verbose) {
 		printf ("Textstart = %ld (hex %lx)\n",textstart+curpos,textstart+curpos);
@@ -174,6 +174,6 @@ int parse_word_header(unsigned char * buffer,FILE *f,int offset,long curpos) {
 			exit(1);
 		}
 	}    
-	return process_file(f,textlen) || ret_code;
+	return process_file(f,textlen) || ret_code;     // [note] we control this length
 }   
 

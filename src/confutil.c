@@ -147,7 +147,7 @@ void get_locale_charset() {
 		}	
 		if (check_charset(&dest_csname,newstr)) {
 			locale_charset = dest_csname;
-		}	
+		}	free(newstr);   // [fix] added this to fix leaksanitizer
 	}	
 
 }	

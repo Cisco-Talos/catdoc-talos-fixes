@@ -90,14 +90,14 @@ void copy_out (FILE *f,char *header) {
 /*  pointed by get_unicode_char, searches for things which looks like     */
 /*  paragraphs and print them out                                         */
 /**************************************************************************/
-int process_file(FILE *f,long stop) {
+int process_file(FILE *f,long stop) {           // [note] looks like we can control this
 	int bufptr;
 	int tabmode=0;
 	long offset=0;
 	int hyperlink_mode = 0;
 	unsigned short c;
 	/* Now we are starting to read with get_unicode_char */
-	while (!catdoc_eof(f) && offset<stop) {
+	while (!catdoc_eof(f) && offset<stop) {             // [note] this loop is constrained by something we control
 		bufptr = -1;
 		do {
 			c=get_unicode_char(f,&offset,stop);
@@ -117,7 +117,7 @@ int process_file(FILE *f,long stop) {
 			if (tabmode) {
 				tabmode=0;
 				if (c==0x007) {
-					buffer[++bufptr]=0x1E;
+					buffer[++bufptr]=0x1E;          // [note] can def write oob here
 					continue;
 				} else {
 					buffer[++bufptr]=0x1C;
@@ -130,7 +130,7 @@ int process_file(FILE *f,long stop) {
 						break;
 					case 0x000D:
 					case 0x000B:
-						buffer[++bufptr]=0x000A;
+						buffer[++bufptr]=0x000A;    // [note] no oob check
 						break;
 					case 0x000C:
 						buffer[++bufptr]=c;
@@ -174,7 +174,7 @@ int process_file(FILE *f,long stop) {
 				 !catdoc_eof(f) &&
 				 buffer[bufptr]!=0x000a);
 		if (bufptr>0) {
-			buffer[++bufptr]=0;
+			buffer[++bufptr]=0;             // [note] no oob check here too
 			output_paragraph(buffer);
 		}
 	}
@@ -191,14 +191,14 @@ int process_file(FILE *f,long stop) {
  * offset - position of the character inside file (to determine       * 
  * possible  block boundaries                                         *
  **********************************************************************/ 
-int get_word8_char(FILE *f,long *offset,long fileend) {
+int get_word8_char(FILE *f,long *offset,long fileend) {     // [note] offset is updated in caller
 	int count,i,u;
 	char c;
 	if ((i=(*offset)%256) ==0) {
 		count=catdoc_read(read_buf,1,256,f);
 		memset(read_buf+count,0,256-count);
 		buf_is_unicode=0;
-		if (*offset+(long)count>fileend) {
+		if (*offset+(long)count>fileend) {              // [note] is this an obo?
 			count=fileend-*offset;
 		}	
 		while (i<count) {

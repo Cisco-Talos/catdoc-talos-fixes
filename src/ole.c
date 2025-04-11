@@ -105,18 +105,18 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	} else if (strncmp((char *)&oleBuf,ole_sign,8) != 0) {
 		return NULL;
 	}
- 	sectorSize = 1<<getshort(oleBuf,0x1e);
-	shortSectorSize=1<<getshort(oleBuf,0x20);
+ 	sectorSize = 1<<getshort(oleBuf,0x1e);                  // [note] shift overflow [XXX] why is this is clamping to 32bit?
+	shortSectorSize=1<<getshort(oleBuf,0x20);               // [note] shift overflow [XXX] why is this is clamping to 32bit?
 
 /* Read BBD into memory */
 	bbdNumBlocks = getulong(oleBuf,0x2c);
-	bbdSize = bbdNumBlocks * sectorSize;
-	if (bbdSize > fileLength) {
+	bbdSize = bbdNumBlocks * sectorSize;                    // [note] product overflow
+	if (bbdSize > fileLength) {                             // [note] signedness issue
 		/* broken file, BBD size greater than entire file*/
 		return NULL;
 	}
 
-	if((BBD=malloc(bbdNumBlocks*sectorSize)) == NULL ) {
+	if((BBD=malloc(bbdNumBlocks*sectorSize)) == NULL ) {    // [note] product overflow [XXX] notreal
 		return NULL;
 	}
 
@@ -126,7 +126,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	memcpy(tmpBuf,oleBuf+0x4c,MSAT_ORIG_SIZE);
 	mblock=getlong(oleBuf,0x44);
 	msat_size=getlong(oleBuf,0x48);
-	if (msat_size * sectorSize > fileLength) {
+	if (msat_size * sectorSize > fileLength) {              // [note] product overflow [XXX] notreal
 		free(tmpBuf);
 		return NULL;
 	}
@@ -137,7 +137,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	while((mblock >= 0) && (i < msat_size)) {
 		unsigned char *newbuf;
 /* 		fprintf(stderr, "i=%d mblock=%ld\n", i, mblock); */
-		if ((newbuf=realloc(tmpBuf, sectorSize*(i+1)+MSAT_ORIG_SIZE)) != NULL) {
+		if ((newbuf=realloc(tmpBuf, sectorSize*(i+1)+MSAT_ORIG_SIZE)) != NULL) {    // [note] potential product overflow [XXX] notreal
 			tmpBuf=newbuf;
 		} else {
 			perror("MSAT realloc error");
@@ -147,7 +147,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 		}
 
 		fseek(newfile, 512+mblock*sectorSize, SEEK_SET);
-		if(fread(tmpBuf+MSAT_ORIG_SIZE+(sectorSize-4)*i,
+		if(fread(tmpBuf+MSAT_ORIG_SIZE+(sectorSize-4)*i,            // [note] integer overflow and underflow [poc.1] worthless
 						 1, sectorSize, newfile) != sectorSize) {
 			fprintf(stderr, "Error read MSAT!\n");
 			ole_finish();
@@ -159,8 +159,8 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	}
 
 /* 	fprintf(stderr, "bbdNumBlocks=%ld\n", bbdNumBlocks); */
-	for(i=0; i< bbdNumBlocks; i++) {
-		long int bbdSector=getlong(tmpBuf,4*i);
+	for(i=0; i< bbdNumBlocks; i++) {                    // [note] truncation issue? since bbdNumBlocks is sighed?
+		long int bbdSector=getlong(tmpBuf,4*i);         // [XXX] can't trigger this issue without hitting bug in previous loop
 
 		if (bbdSector >= fileLength/sectorSize || bbdSector < 0) {
 			fprintf(stderr, "Bad BBD entry!\n");
@@ -168,7 +168,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 			return NULL;
 		}
 		fseek(newfile, 512+bbdSector*sectorSize, SEEK_SET);
-		if ( fread(BBD+i*sectorSize, 1, sectorSize, newfile) != sectorSize ) {
+		if ( fread(BBD+i*sectorSize, 1, sectorSize, newfile) != sectorSize ) {  // [note] can this write oob?
 			fprintf(stderr, "Can't read BBD!\n");
 			free(tmpBuf);
 			ole_finish();
@@ -182,19 +182,19 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	sbdMaxLen=10;
 	sbdCurrent = sbdStart = getlong(oleBuf,0x3c);
 	if (sbdStart > 0) {
-		if((SBD=malloc(sectorSize*sbdMaxLen)) == NULL ) {
+		if((SBD=malloc(sectorSize*sbdMaxLen)) == NULL ) {           // [note] product overflow [XXX} can't do anything here other than spin indefinitely
 			ole_finish();
 			return NULL;
-		}
+		}           // [poc.2] only can infinite(?) loop, so i'ma givin' up.
 		while(1) {
-			fseek(newfile, 512+sbdCurrent*sectorSize, SEEK_SET);
-			fread(SBD+sbdLen*sectorSize, 1, sectorSize, newfile);
+			fseek(newfile, 512+sbdCurrent*sectorSize, SEEK_SET);    // [note] product overflow (useless, tho)
+			fread(SBD+sbdLen*sectorSize, 1, sectorSize, newfile);   // [note] oob read?
 			sbdLen++;
 			if (sbdLen >= sbdMaxLen) {
 				unsigned char *newSBD;
 
 				sbdMaxLen+=5;
-				if ((newSBD=realloc(SBD, sectorSize*sbdMaxLen)) != NULL) {
+				if ((newSBD=realloc(SBD, sectorSize*sbdMaxLen)) != NULL) {  // [note] product overflow
 					SBD=newSBD;
 				} else {
 					perror("SBD realloc error");
@@ -211,7 +211,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 				sbdCurrent >= fileLength/sectorSize)
 				break;
 		}
-		sbdNumber = (sbdLen*sectorSize)/shortSectorSize;
+		sbdNumber = (sbdLen*sectorSize)/shortSectorSize;            // [note] product overflow? sbdNumber is 64-bit [XXX] not real
 /*   		fprintf(stderr, "sbdLen=%ld sbdNumber=%ld\n",sbdLen, sbdNumber); */
 	} else {
 		SBD=NULL;
@@ -221,7 +221,7 @@ FILE* ole_init(FILE *f, void *buffer, size_t bufSize)  {
 	propMaxLen = 5;
 	propCurrent = propStart = getlong(oleBuf,0x30);
 	if (propStart >= 0) {
-		if((properties=malloc(propMaxLen*sectorSize)) == NULL ) {
+		if((properties=malloc(propMaxLen*sectorSize)) == NULL ) {   // [note] potential product overflow
 			ole_finish();
 			return NULL;
 		}
@@ -342,7 +342,7 @@ FILE *ole_readdir(FILE *f) {
 		return NULL;
 	}
 	for (i=0 ; i < nLen /2; i++)
-		e->name[i]=(char)oleBuf[i*2];
+		e->name[i]=(char)oleBuf[i*2];       // [note] pretty sure this is the wrong type
 	e->name[i]='\0';
 	propCurNumber++;
 	e->length=getulong(oleBuf,0x78);
@@ -380,10 +380,10 @@ FILE *ole_readdir(FILE *f) {
 				break;
 			}
 /* 			fprintf(stderr, "chainCurrent=%ld\n", chainCurrent); */
-			e->blocks[e->numOfBlocks++] = chainCurrent;
+			e->blocks[e->numOfBlocks++] = chainCurrent;                         // [note] this seems to be growing the fat chain...
 			if (e->numOfBlocks >= chainMaxLen) {
 				long int *newChain;
-				chainMaxLen+=25;
+				chainMaxLen+=25;                                                // [note] ...by 25 for each set of blocks(?)
 				if ((newChain=realloc(e->blocks,
 									  chainMaxLen*sizeof(long int))) != NULL) {
 					e->blocks=newChain;
@@ -440,14 +440,14 @@ int ole_open(FILE *stream) {
 long int calcFileBlockOffset(oleEntry *e, long int blk) {
 	long int res;
 	if ( e->isBigBlock ) {
-		res=512+e->blocks[blk]*sectorSize;
+		res=512+e->blocks[blk]*sectorSize;                  // [note] product overflow
 	} else {
 		long int sbdPerSector=sectorSize/shortSectorSize;
 		long int sbdSecNum=e->blocks[blk]/sbdPerSector;
 		long int sbdSecMod=e->blocks[blk]%sbdPerSector;
 /* 		fprintf(stderr, "calcoffset: e->name=%s e->numOfBlocks=%ld length=%ld sbdSecNum=%ld rootEntry->blocks=%p\n",
  						e->name, e->numOfBlocks, e->length, sbdSecNum, rootEntry->blocks);*/
-		res=512 + rootEntry->blocks[sbdSecNum]*sectorSize + sbdSecMod*shortSectorSize;
+		res=512 + rootEntry->blocks[sbdSecNum]*sectorSize + sbdSecMod*shortSectorSize;  // [note] product overflow
 	}
 	return res;
 }
@@ -477,7 +477,7 @@ size_t ole_read(void *ptr, size_t size, size_t nmemb, FILE *stream) {
 	blockNumber=e->ole_offset/ssize;
 /* 	fprintf(stderr, "blockNumber=%ld e->numOfBlocks=%ld llen=%ld\n", */
 /* 			blockNumber, e->numOfBlocks, llen); */
-	if ( blockNumber >= e->numOfBlocks || llen <=0 )
+	if ( blockNumber >= e->numOfBlocks || llen <=0 )    // [note] guards that llen is always unsigned
 		return 0;
 
 	modBlock=e->ole_offset%ssize;
@@ -556,7 +556,7 @@ void ole_finish(void) {
  * @return
  */
 int ole_close(FILE *stream) {
-	oleEntry *e=(oleEntry*)stream;
+	oleEntry *e=(oleEntry*)stream;      // [note] this is a probably terrible cast
 	if(e == NULL)
 		return -1;
 	if (e->blocks != NULL)
